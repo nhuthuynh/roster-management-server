@@ -1,4 +1,4 @@
-package com.project.cafemanagement;
+package com.project.cafeemployeemanagement;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
