@@ -1,6 +1,5 @@
 package com.project.cafeemployeemanagement.util;
 
-import com.project.cafeemployeemanagement.model.Employee;
 import com.project.cafeemployeemanagement.model.EmployeeShift;
 import com.project.cafeemployeemanagement.model.Roster;
 import com.project.cafeemployeemanagement.payload.RosterResponse;
@@ -26,8 +25,8 @@ public class ModelMapper {
                 shiftResponse.setId(employeeShift.getId());
                 shiftResponse.setStart(String.format("%s %s", dateString, utils.formatTime(employeeShift.getStartTime())));
                 shiftResponse.setEnd(String.format("%s %s", dateString, utils.formatTime(employeeShift.getEndTime())));
-                shiftResponse.setShiftID(employeeShift.getShift().getId());
-                shiftResponse.setEmployeeID(employeeShift.getEmployee().getId());
+                shiftResponse.setShiftId(employeeShift.getShift().getId());
+                shiftResponse.setEmployeeId(employeeShift.getEmployee().getId());
                 shiftResponse.setTitle(String.format("%s %s", employeeShift.getEmployee().getFirstName(), employeeShift.getEmployee().getLastName()));
                 shiftResponses.add(shiftResponse);
             }

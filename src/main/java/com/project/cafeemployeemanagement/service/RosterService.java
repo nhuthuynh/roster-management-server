@@ -15,8 +15,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.ui.ModelMap;
-
 
 import javax.transaction.Transactional;
 import java.util.*;
@@ -41,9 +39,11 @@ public class RosterService {
     public boolean createRoster(RosterRequest rosterRequest) {
         Roster newRoster = new Roster();
 
+        newRoster.setId(rosterRequest.getId());
         newRoster.setFromDate(rosterRequest.getFromDate());
         newRoster.setToDate(rosterRequest.getToDate());
         newRoster.setCreatedDate(rosterRequest.getCreatedDate());
+
         List<Shift> shifts = new ArrayList<>();
 
         rosterRequest.getShiftList().forEach(shiftRequest -> {

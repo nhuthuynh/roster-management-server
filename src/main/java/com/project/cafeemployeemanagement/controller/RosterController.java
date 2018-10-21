@@ -1,9 +1,7 @@
 package com.project.cafeemployeemanagement.controller;
 
-import com.project.cafeemployeemanagement.model.Employee;
 import com.project.cafeemployeemanagement.model.Roster;
 import com.project.cafeemployeemanagement.payload.ApiResponse;
-import com.project.cafeemployeemanagement.payload.EmployeeResponse;
 import com.project.cafeemployeemanagement.payload.RosterRequest;
 import com.project.cafeemployeemanagement.payload.RosterResponse;
 import com.project.cafeemployeemanagement.repository.EmployeeRepository;
@@ -43,8 +41,8 @@ public class RosterController {
 
     @GetMapping("/load")
     public @ResponseBody
-    RosterResponse loadRoster(@RequestParam("from") @DateTimeFormat(pattern="dd-MM-yyyy") Date fromDate) {
-        Roster roster = rosterRepository.findByStartDate(fromDate);
+    RosterResponse loadRoster(@RequestParam("from") @DateTimeFormat(pattern="dd-MM-yyyy") Date fromDate, @RequestParam("to") @DateTimeFormat(pattern="dd-MM-yyyy") Date toDate) {
+        Roster roster = rosterRepository.findByDates(fromDate, toDate);
         if (roster == null) {
             return new RosterResponse();
         }

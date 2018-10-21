@@ -9,6 +9,8 @@ import java.util.List;
 
 public class RosterRequest {
 
+    private Long id;
+
     @JsonDeserialize(using= CustomDateDeserialize.class)
     private Date fromDate;
 
@@ -19,6 +21,14 @@ public class RosterRequest {
     private Date createdDate;
 
     private List<ShiftRequest> shiftList = new ArrayList<>();
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
 
     public Date getFromDate() {
         return fromDate;

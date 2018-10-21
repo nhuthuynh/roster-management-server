@@ -13,7 +13,7 @@ public interface RosterRepository extends JpaRepository<Roster, Long> {
     //@Query("SELECT NEW com.example.polls.model.ChoiceVoteCount(v.choice.id, count(v.id)) FROM Vote v WHERE v.poll.id in :pollIds GROUP BY v.choice.id")
     //List<ChoiceVoteCount> countByPollIdInGroupByChoiceId(@Param("pollIds") List<Long> pollIds);
 
-    @Query("SELECT r FROM Roster AS r WHERE r.fromDate = :fromDate")
-    Roster findByStartDate(@Param("fromDate") Date fromDate);
+    @Query("SELECT r FROM Roster AS r WHERE r.fromDate >= :fromDate and r.fromDate <= :toDate")
+    Roster findByDates(@Param("fromDate") Date fromDate, @Param("toDate") Date toDate);
 
 }

@@ -45,19 +45,19 @@ public class ShiftResponse {
         this.title = title;
     }
 
-    public Long getShiftID() {
+    public Long getShiftId() {
         return shiftId;
     }
 
-    public void setShiftID(Long shiftID) {
+    public void setShiftId(Long shiftID) {
         this.shiftId = shiftID;
     }
 
-    public Long getEmployeeID() {
+    public Long getEmployeeId() {
         return employeeId;
     }
 
-    public void setEmployeeID(Long employeeID) {
+    public void setEmployeeId(Long employeeID) {
         this.employeeId = employeeID;
     }
 }
