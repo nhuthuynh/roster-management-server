@@ -38,8 +38,12 @@ public class RosterService {
     @Transactional
     public boolean createRoster(RosterRequest rosterRequest) {
         Roster newRoster = new Roster();
+        Roster oldRoster = rosterRepository.findById(rosterRequest.getId()).get();
 
-        newRoster.setId(rosterRequest.getId());
+        if (oldRoster != null) {
+            rosterRepository.delete(oldRoster);
+        }
+
         newRoster.setFromDate(rosterRequest.getFromDate());
         newRoster.setToDate(rosterRequest.getToDate());
         newRoster.setCreatedDate(rosterRequest.getCreatedDate());
