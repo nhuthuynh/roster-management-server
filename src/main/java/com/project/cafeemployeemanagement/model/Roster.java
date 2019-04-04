@@ -24,6 +24,10 @@ public class Roster {
             orphanRemoval = true)
     private List<Shift> shifts = new ArrayList<>();
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="employee_id")
+    private Employee employee;
+
     public void addShift(Shift shift) {
         shifts.add(shift);
         shift.setRoster(this);
@@ -101,4 +105,22 @@ public class Roster {
         this.shifts = shiftList;
     }
 
+    public Employee getEmployee() {
+        return employee;
+    }
+
+    public void setEmployee(Employee employee) {
+        this.employee = employee;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Roster )) return false;
+        return id != null && id.equals(((Roster) o).getId());
+    }
+    @Override
+    public int hashCode() {
+        return 31;
+    }
 }

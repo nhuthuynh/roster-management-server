@@ -18,16 +18,16 @@ public class EmployeeResponse {
 
     private String email;
 
+    private Long shopOwnerId;
+
     @JsonDeserialize(using= CustomDateDeserialize.class)
     private Date joinedDate;
 
-    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
-    private EmployeeType type;
+    private String type;
 
-    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
-    private Role role;
+    private String role;
 
-    public EmployeeResponse(Long id, String firstName, String lastName, String email, Date joinedDate, EmployeeType type, Role role) {
+    public EmployeeResponse(Long id, String firstName, String lastName, String email, Date joinedDate, String type, String role, Long shopOwnerId) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -35,6 +35,7 @@ public class EmployeeResponse {
         this.joinedDate = joinedDate;
         this.type = type;
         this.role = role;
+        this.shopOwnerId = shopOwnerId;
     }
 
     public Long getId() {
@@ -77,19 +78,27 @@ public class EmployeeResponse {
         this.joinedDate = joinedDate;
     }
 
-    public EmployeeType getType() {
+    public String getType() {
         return type;
     }
 
-    public void setType(EmployeeType type) {
+    public void setType(String type) {
         this.type = type;
     }
 
-    public Role getRole() {
+    public String getRole() {
         return role;
     }
 
-    public void setRole(Role role) {
+    public void setRole(String role) {
         this.role = role;
+    }
+
+    public Long getShopOwnerId() {
+        return shopOwnerId;
+    }
+
+    public void setShopOwnerId(Long shopOwnerId) {
+        this.shopOwnerId = shopOwnerId;
     }
 }

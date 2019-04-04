@@ -34,15 +34,16 @@ public class RosterController {
 
     @PostMapping("/create")
     public ResponseEntity<?> createRoster(@Valid @RequestBody RosterRequest rosterRequest) {
+        rosterService.deleteRoster(rosterRequest.getId());
         if (rosterService.createRoster(rosterRequest))
-            return ResponseEntity.ok().body(new ApiResponse(true, "Roster created sucessfully!"));
+            return ResponseEntity.ok().body(new ApiResponse(true, "Roster created successfully!"));
         return  ResponseEntity.badRequest().body(new ApiResponse(false, "create roster failed!"));
     }
 
     @GetMapping("/load")
     public @ResponseBody
-    RosterResponse loadRoster(@RequestParam("from") @DateTimeFormat(pattern="dd-MM-yyyy") Date fromDate, @RequestParam("to") @DateTimeFormat(pattern="dd-MM-yyyy") Date toDate) {
-        Roster roster = rosterRepository.findByDates(fromDate, toDate);
+    RosterResponse loadRoster(@RequestParam("from") @DateTimeFormat(pattern="dd-MM-yyyy") Date fromDate, @RequestParam("to") @DateTimeFormat(pattern="dd-MM-yyyy") Date toDate, @RequestParam("shopOwnerId") Long employeeId) {
+        Roster roster = rosterRepository.findByDates(fromDate, toDate, employeeId);
         if (roster == null) {
             return new RosterResponse();
         }
