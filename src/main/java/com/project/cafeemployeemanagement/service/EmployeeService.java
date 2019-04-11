@@ -60,7 +60,7 @@ public class EmployeeService implements UserDetailsService {
                 .findByName(utilsService.getRoleName(signUpRequest.getRole()))
                 .orElseThrow(()-> new AppException("Employee Role has not defined!"));
         String password = passwordEncoder.encode(signUpRequest.getPassword());
-        Employee emp = new Employee(signUpRequest.getFirstName(), signUpRequest.getLastName(), signUpRequest.getPhoneNumber(), signUpRequest.getEmail(), password, 0);
+        Employee emp = new Employee(signUpRequest.getFirstName(), signUpRequest.getLastName(), signUpRequest.getPhoneNumber(), signUpRequest.getEmail(), password, 0, signUpRequest.getShopOwnerId());
 
         emp.setRole(role);
         emp.setEmployeeType(empType);

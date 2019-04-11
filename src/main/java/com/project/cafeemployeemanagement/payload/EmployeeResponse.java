@@ -27,7 +27,9 @@ public class EmployeeResponse {
 
     private String role;
 
-    public EmployeeResponse(Long id, String firstName, String lastName, String email, Date joinedDate, String type, String role, Long shopOwnerId) {
+    private String phoneNumber;
+
+    public EmployeeResponse(Long id, String firstName, String lastName, String email, Date joinedDate, String type, String role, Long shopOwnerId, String phoneNumber) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -36,6 +38,7 @@ public class EmployeeResponse {
         this.type = type;
         this.role = role;
         this.shopOwnerId = shopOwnerId;
+        this.phoneNumber = phoneNumber;
     }
 
     public Long getId() {
@@ -100,5 +103,13 @@ public class EmployeeResponse {
 
     public void setShopOwnerId(Long shopOwnerId) {
         this.shopOwnerId = shopOwnerId;
+    }
+
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
     }
 }

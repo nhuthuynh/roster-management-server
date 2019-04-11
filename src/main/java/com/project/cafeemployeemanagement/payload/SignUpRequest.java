@@ -26,6 +26,16 @@ public class SignUpRequest {
     @NotBlank
     private String role;
 
+    private Long shopOwnerId;
+
+    public Long getShopOwnerId() {
+        return shopOwnerId;
+    }
+
+    public void setShopOwnerId(Long shopOwnerId) {
+        this.shopOwnerId = shopOwnerId;
+    }
+
     public String getFirstName() {
         return firstName;
     }

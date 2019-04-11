@@ -6,10 +6,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 public class UserPrincipal implements UserDetails {
     private Long id;
@@ -30,7 +27,11 @@ public class UserPrincipal implements UserDetails {
 
     private String type;
 
-    public UserPrincipal(Long id, String firstName, String lastName, String email, String password, Collection<? extends GrantedAuthority> authorities, String type, String role, Long shopOwnerId) {
+    private Date joinedDate;
+
+    private String phoneNumber;
+
+    public UserPrincipal(Long id, String firstName, String lastName, String email, String password, Collection<? extends GrantedAuthority> authorities, Date joinedDate, String type, String role, Long shopOwnerId, String phoneNumber) {
         this.id = id;
         this.email = email;
         this.firstName = firstName;
@@ -40,6 +41,8 @@ public class UserPrincipal implements UserDetails {
         this.shopOwnerId = shopOwnerId;
         this.role = role;
         this.type = type;
+        this.joinedDate = joinedDate;
+        this.phoneNumber = phoneNumber;
     }
 
     public static UserPrincipal create(Employee employee) {
@@ -53,9 +56,11 @@ public class UserPrincipal implements UserDetails {
                 employee.getEmail(),
                 employee.getPassword(),
                 authorities,
+                employee.getJoinedDate(),
                 employee.getEmployeeType().getType().name(),
                 employee.getRole().getName().name(),
-                employee.getShopOwnerId()
+                employee.getShopOwnerId(),
+                employee.getPhoneNumber()
         );
     }
 
@@ -130,6 +135,14 @@ public class UserPrincipal implements UserDetails {
         this.role = role;
     }
 
+    public Date getJoinedDate() {
+        return joinedDate;
+    }
+
+    public void setJoinedDate(Date joinedDate) {
+        this.joinedDate = joinedDate;
+    }
+
     public String getType() {
         return type;
     }
@@ -140,6 +153,14 @@ public class UserPrincipal implements UserDetails {
 
     public void setShopOwnerId(Long shopOwnerId) {
         this.shopOwnerId = shopOwnerId;
+    }
+
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
     }
 
     @Override

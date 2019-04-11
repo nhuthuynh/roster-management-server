@@ -8,8 +8,6 @@ import org.springframework.stereotype.Repository;
 
 import java.util.Date;
 
-import static com.sun.tools.doclint.Entity.or;
-
 @Repository
 public interface RosterRepository extends JpaRepository<Roster, Long> {
     @Query("SELECT r FROM Roster AS r WHERE r.fromDate >= :fromDate and r.fromDate <= :toDate and r.employee.id = :employeeId")

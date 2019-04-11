@@ -87,7 +87,7 @@ public class Employee implements Serializable {
 
     public Employee() {}
 
-    public Employee(String firstName, String lastName, String phoneNumber, String email, String password, double hourlyRate) {
+    public Employee(String firstName, String lastName, String phoneNumber, String email, String password, double hourlyRate, Long shopOwnerId) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.hourlyRate = hourlyRate;
@@ -96,6 +96,7 @@ public class Employee implements Serializable {
         this.password = password;
         this.email = email;
         this.joinedDate = new Date();
+        this.shopOwnerId = shopOwnerId;
     }
 
     public Long getId() {
@@ -193,6 +194,8 @@ public class Employee implements Serializable {
     public void setJoinedDate(Date joinedDate) {
         this.joinedDate = joinedDate;
     }
+
+
 
     @Override
     public boolean equals(Object o) {
