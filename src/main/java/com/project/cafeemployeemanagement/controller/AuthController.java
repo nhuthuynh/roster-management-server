@@ -33,7 +33,7 @@ public class AuthController {
     @Autowired
     AuthService authService;
 
-    @PostMapping("/login")
+    @PostMapping("/signin")
     public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
         Authentication authentication = authService.authenticateUser(loginRequest);
         String jwt = authService.getTokenFromAuthenticateUser(authentication);

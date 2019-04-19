@@ -31,7 +31,9 @@ public class UserPrincipal implements UserDetails {
 
     private String phoneNumber;
 
-    public UserPrincipal(Long id, String firstName, String lastName, String email, String password, Collection<? extends GrantedAuthority> authorities, Date joinedDate, String type, String role, Long shopOwnerId, String phoneNumber) {
+    private boolean isResigned;
+
+    public UserPrincipal(Long id, String firstName, String lastName, String email, String password, Collection<? extends GrantedAuthority> authorities, Date joinedDate, String type, String role, Long shopOwnerId, String phoneNumber, boolean isResigned) {
         this.id = id;
         this.email = email;
         this.firstName = firstName;
@@ -43,6 +45,7 @@ public class UserPrincipal implements UserDetails {
         this.type = type;
         this.joinedDate = joinedDate;
         this.phoneNumber = phoneNumber;
+        this.isResigned = isResigned;
     }
 
     public static UserPrincipal create(Employee employee) {
@@ -60,7 +63,8 @@ public class UserPrincipal implements UserDetails {
                 employee.getEmployeeType().getType().name(),
                 employee.getRole().getName().name(),
                 employee.getShopOwnerId(),
-                employee.getPhoneNumber()
+                employee.getPhoneNumber(),
+                employee.isResigned()
         );
     }
 
@@ -161,6 +165,14 @@ public class UserPrincipal implements UserDetails {
 
     public void setPhoneNumber(String phoneNumber) {
         this.phoneNumber = phoneNumber;
+    }
+
+    public boolean isResigned() {
+        return isResigned;
+    }
+
+    public void setResigned(boolean resigned) {
+        isResigned = resigned;
     }
 
     @Override

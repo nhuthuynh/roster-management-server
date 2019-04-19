@@ -87,11 +87,11 @@ public class Employee implements Serializable {
 
     public Employee() {}
 
-    public Employee(String firstName, String lastName, String phoneNumber, String email, String password, double hourlyRate, Long shopOwnerId) {
+    public Employee(String firstName, String lastName, String phoneNumber, String email, String password, double hourlyRate, Long shopOwnerId, boolean isResigned) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.hourlyRate = hourlyRate;
-        this.isResigned = false;
+        this.isResigned = isResigned;
         this.phoneNumber = phoneNumber;
         this.password = password;
         this.email = email;

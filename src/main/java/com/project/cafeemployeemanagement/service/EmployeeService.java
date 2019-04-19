@@ -2,6 +2,7 @@ package com.project.cafeemployeemanagement.service;
 
 import com.project.cafeemployeemanagement.exception.AppException;
 import com.project.cafeemployeemanagement.model.*;
+import com.project.cafeemployeemanagement.payload.ResignEmployeeRequest;
 import com.project.cafeemployeemanagement.repository.EmployeeTypeRepository;
 import com.project.cafeemployeemanagement.repository.RoleRepository;
 import com.project.cafeemployeemanagement.security.UserPrincipal;
@@ -60,7 +61,7 @@ public class EmployeeService implements UserDetailsService {
                 .findByName(utilsService.getRoleName(signUpRequest.getRole()))
                 .orElseThrow(()-> new AppException("Employee Role has not defined!"));
         String password = passwordEncoder.encode(signUpRequest.getPassword());
-        Employee emp = new Employee(signUpRequest.getFirstName(), signUpRequest.getLastName(), signUpRequest.getPhoneNumber(), signUpRequest.getEmail(), password, 0, signUpRequest.getShopOwnerId());
+        Employee emp = new Employee(signUpRequest.getFirstName(), signUpRequest.getLastName(), signUpRequest.getPhoneNumber(), signUpRequest.getEmail(), password, 0, signUpRequest.getShopOwnerId(), false);
 
         emp.setRole(role);
         emp.setEmployeeType(empType);
@@ -70,6 +71,15 @@ public class EmployeeService implements UserDetailsService {
 
     public boolean existsByEmail(String email) {
         return employeeRepository.existsByEmail(email);
+    }
+
+    @Transactional
+    public boolean resignEmployees(ResignEmployeeRequest resignEmployeeRequest) {
+        int numberOfUpdatedEmployees = employeeRepository.resignEmployees(resignEmployeeRequest.getEmployeesIdList());
+        if(resignEmployeeRequest.getEmployeesIdList().size() == numberOfUpdatedEmployees) {
+            return true;
+        }
+        return false;
     }
 
 }
