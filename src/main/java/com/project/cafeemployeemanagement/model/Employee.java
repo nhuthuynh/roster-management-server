@@ -5,7 +5,9 @@ import java.io.Serializable;
 import java.util.*;
 
 @Entity
-@Table(name = "employee")
+@Table(name = "employee", uniqueConstraints = {
+        @UniqueConstraint(columnNames = "email")
+})
 public class Employee implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -15,27 +17,56 @@ public class Employee implements Serializable {
 
     private String lastName;
 
-    private long phoneNumber;
+    private String password;
+
+    private String phoneNumber;
 
     private String email;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "role_id")
     private Role role;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "employee_type_id")
     private EmployeeType employeeType;
 
     private double hourlyRate;
 
-    @OneToOne(mappedBy="employee", cascade = CascadeType.ALL)
-    private Account account;
-
     @OneToMany(mappedBy = "employee",
             cascade = CascadeType.ALL,
             orphanRemoval = true)
     private List<EmployeeShift> employeeShifts = new ArrayList<>();
+
+    private Long shopOwnerId;
+
+    @OneToMany(
+            mappedBy = "employee",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true)
+    private List<Roster> rostersList = new ArrayList<>();
+
+    public List<Roster> getRostersList() {
+        return rostersList;
+    }
+
+    public void setRostersList(Roster roster) {
+        this.rostersList.add(roster);
+        roster.setEmployee(this);
+    }
+
+    public void removeRoster(Roster roster) {
+        this.rostersList.remove(roster);
+        roster.setEmployee(null);
+    }
+
+    public Long getShopOwnerId() {
+        return shopOwnerId;
+    }
+
+    public void setShopOwnerId(Long shopOwnerId) {
+        this.shopOwnerId = shopOwnerId;
+    }
 
     public void addEmployeeShift(EmployeeShift employeeShift, Employee employee) {
         employeeShift.setEmployee(employee);
@@ -56,16 +87,16 @@ public class Employee implements Serializable {
 
     public Employee() {}
 
-    public Employee(String firstName, String lastName, long phoneNumber, String email, EmployeeType type, Role role, double hourlyRate) {
+    public Employee(String firstName, String lastName, String phoneNumber, String email, String password, double hourlyRate, Long shopOwnerId, boolean isResigned) {
         this.firstName = firstName;
         this.lastName = lastName;
-        this.role = role;
-        this.employeeType = type;
         this.hourlyRate = hourlyRate;
-        this.isResigned = false;
+        this.isResigned = isResigned;
         this.phoneNumber = phoneNumber;
+        this.password = password;
         this.email = email;
         this.joinedDate = new Date();
+        this.shopOwnerId = shopOwnerId;
     }
 
     public Long getId() {
@@ -92,11 +123,11 @@ public class Employee implements Serializable {
         this.lastName = lastName;
     }
 
-    public long getPhoneNumber() {
+    public String getPhoneNumber() {
         return phoneNumber;
     }
 
-    public void setPhoneNumber(long phoneNumber) {
+    public void setPhoneNumber(String phoneNumber) {
         this.phoneNumber = phoneNumber;
     }
 
@@ -132,20 +163,20 @@ public class Employee implements Serializable {
         this.hourlyRate = hourlyRate;
     }
 
-    public Account getAccount() {
-        return account;
-    }
-
-    public void setAccount(Account account) {
-        this.account = account;
-    }
-
     public List<EmployeeShift> getEmployeeShifts() {
         return employeeShifts;
     }
 
     public void setEmployeeShifts(List<EmployeeShift> employeeShifts) {
         this.employeeShifts = employeeShifts;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public boolean isResigned() {
@@ -163,4 +194,18 @@ public class Employee implements Serializable {
     public void setJoinedDate(Date joinedDate) {
         this.joinedDate = joinedDate;
     }
+
+
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Employee )) return false;
+        return id != null && id.equals(((Employee) o).getId());
+    }
+    @Override
+    public int hashCode() {
+        return 31;
+    }
+
 }

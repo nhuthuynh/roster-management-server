@@ -1,5 +1,7 @@
 package com.project.cafeemployeemanagement.model;
 
+import org.hibernate.annotations.NaturalId;
+
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -11,7 +13,10 @@ public class Role {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String name;
+    @Enumerated(EnumType.STRING)
+    @NaturalId
+    @Column(length=60)
+    private RoleName name;
 
     @OneToMany(mappedBy = "role",
             cascade = CascadeType.ALL,
@@ -30,7 +35,7 @@ public class Role {
 
     public Role() {}
 
-    public Role(String name) {
+    public Role(RoleName name) {
         this.name = name;
     }
 
@@ -42,11 +47,11 @@ public class Role {
         this.id = id;
     }
 
-    public String getName() {
+    public RoleName getName() {
         return name;
     }
 
-    public void setName(String name) {
+    public void setName(RoleName name) {
         this.name = name;
     }
 

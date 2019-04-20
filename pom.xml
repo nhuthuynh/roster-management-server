@@ -23,7 +23,7 @@
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<java.version>1.8</java.version>
         <project.build.directory>target</project.build.directory>
-        <project.build.finalName>${name}-${version}</project.build.finalName>
+        <project.build.finalName>${project.name}-${project.version}</project.build.finalName>
 	</properties>
 
 	<dependencies>
@@ -90,7 +90,13 @@
 			<artifactId>activation</artifactId>
 			<version>1.1.1</version>
 		</dependency>
-	</dependencies>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-api</artifactId>
+            <version>5.3.1</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
 
 	<build>
 		<plugins>
@@ -111,7 +117,7 @@
 					</includes>
 					<jdkVersion>${java.version}</jdkVersion>
 					<processTypes>
-						<web>java $JAVA_OPTS -jar target/cafeemployeemanagement-0.0.1-SNAPSHOT.jar</web>
+						<web>java $JAVA_OPTS -jar target/${project.name}-${project.version}.jar</web>
 					</processTypes>
 				</configuration>
 			</plugin>

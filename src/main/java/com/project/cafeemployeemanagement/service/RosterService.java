@@ -38,11 +38,6 @@ public class RosterService {
     @Transactional
     public boolean createRoster(RosterRequest rosterRequest) {
         Roster newRoster = new Roster();
-        Roster oldRoster = rosterRepository.findById(rosterRequest.getId()).get();
-
-        if (oldRoster != null) {
-            rosterRepository.delete(oldRoster);
-        }
 
         newRoster.setFromDate(rosterRequest.getFromDate());
         newRoster.setToDate(rosterRequest.getToDate());
@@ -62,6 +57,11 @@ public class RosterService {
         newRoster.setShiftList(shifts);
         rosterRepository.save(newRoster);
         return true;
+    }
+
+    public void deleteRoster(Long rosterId) {
+        Roster roster = rosterRepository.findById(rosterId).get();
+        rosterRepository.delete(roster);
     }
 
     public RosterResponse loadRoster(Roster roster) {
