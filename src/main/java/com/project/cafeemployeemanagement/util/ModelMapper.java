@@ -1,7 +1,9 @@
 package com.project.cafeemployeemanagement.util;
 
+import com.project.cafeemployeemanagement.model.Availability;
 import com.project.cafeemployeemanagement.model.EmployeeShift;
 import com.project.cafeemployeemanagement.model.Roster;
+import com.project.cafeemployeemanagement.payload.AvailabilityResponse;
 import com.project.cafeemployeemanagement.payload.RosterResponse;
 import com.project.cafeemployeemanagement.payload.ShiftResponse;
 
@@ -34,6 +36,23 @@ public class ModelMapper {
         response.setShiftList(shiftResponses);
 
         return response;
+    }
+
+    public static List<AvailabilityResponse> mapAvailabilitiesToResponse(List<Availability> availabilities) {
+        List<AvailabilityResponse> availabilityResponseList = new ArrayList<>();
+
+        availabilities.forEach(availability -> {
+            availabilityResponseList.add(new AvailabilityResponse(
+                    availability.getId(),
+                    availability.getDay(),
+                    availability.getStartHour(),
+                    availability.getStartMinute(),
+                    availability.getEndHour(),
+                    availability.getEndMinute(),
+                    availability.isAvailable()));
+        });
+
+        return availabilityResponseList;
     }
 
 }

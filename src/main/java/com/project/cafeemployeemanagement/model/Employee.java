@@ -38,6 +38,11 @@ public class Employee implements Serializable {
             orphanRemoval = true)
     private List<EmployeeShift> employeeShifts = new ArrayList<>();
 
+    @OneToMany(mappedBy = "employee",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true)
+    private List<Availability> availabilityList = new ArrayList<>();
+
     private Long shopOwnerId;
 
     @OneToMany(
@@ -58,6 +63,31 @@ public class Employee implements Serializable {
     public void removeRoster(Roster roster) {
         this.rostersList.remove(roster);
         roster.setEmployee(null);
+    }
+
+    public List<Availability> getAvailabilityList() {
+        return availabilityList;
+    }
+
+    public void setAvailabilityList(List<Availability> availabilityList) {
+        this.availabilityList.clear();
+
+        if (availabilityList == null || availabilityList.isEmpty()) {
+            return;
+        }
+
+        availabilityList.forEach(availability -> availability.setEmployee(this));
+        this.availabilityList.addAll(availabilityList);
+    }
+
+    public void addAvailability(Availability availability) {
+        this.availabilityList.add(availability);
+        availability.setEmployee(this);
+    }
+
+    public void removeAvailability(Availability availability) {
+        this.availabilityList.remove(availability);
+        availability.setEmployee(null);
     }
 
     public Long getShopOwnerId() {
