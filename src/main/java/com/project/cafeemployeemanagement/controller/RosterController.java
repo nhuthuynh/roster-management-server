@@ -30,8 +30,6 @@ public class RosterController {
     @Autowired
     RosterService rosterService;
 
-    private static final Logger logger = LoggerFactory.getLogger(RosterController.class);
-
     @PostMapping("/create")
     public ResponseEntity<?> createRoster(@Valid @RequestBody RosterRequest rosterRequest) {
         rosterService.deleteRoster(rosterRequest.getId());

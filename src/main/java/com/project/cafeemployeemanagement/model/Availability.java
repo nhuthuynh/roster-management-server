@@ -1,7 +1,12 @@
-package com.project.cafeemployeemanagement.payload;
+package com.project.cafeemployeemanagement.model;
 
-public class AvailabilityResponse {
+import javax.persistence.*;
 
+@Entity
+@Table(name="availability")
+public class Availability {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String day;
@@ -16,13 +21,39 @@ public class AvailabilityResponse {
 
     private boolean isAvailable;
 
-    public AvailabilityResponse(Long id, String day, int startHour, int startMinute, int endHour, int endMinute, boolean isAvailable) {
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="employee_id")
+    private Employee employee;
+
+    public Availability() {}
+
+    public Availability(Long id, String day, int startHour, int startMinute, int endHour, int endMinute, boolean isAvailable) {
         this.id = id;
         this.day = day;
         this.startHour = startHour;
         this.startMinute = startMinute;
         this.endHour = endHour;
         this.endMinute = endMinute;
+        this.isAvailable = isAvailable;
+    }
+
+    public Availability(String day, int startHour, int startMinute, int endHour, int endMinute, boolean isAvailable) {
+        this.day = day;
+        this.startHour = startHour;
+        this.startMinute = startMinute;
+        this.endHour = endHour;
+        this.endMinute = endMinute;
+        this.isAvailable = isAvailable;
+    }
+
+    public Availability(Long id, String day, int startHour, int startMinute, int endHour, int endMinute, boolean isAvailable, Employee employee) {
+        this.id = id;
+        this.day = day;
+        this.startHour = startHour;
+        this.startMinute = startMinute;
+        this.endHour = endHour;
+        this.endMinute = endMinute;
+        this.employee = employee;
         this.isAvailable = isAvailable;
     }
 
@@ -76,5 +107,13 @@ public class AvailabilityResponse {
 
     public void setAvailable(boolean available) {
         isAvailable = available;
+    }
+
+    public Employee getEmployee() {
+        return employee;
+    }
+
+    public void setEmployee(Employee employee) {
+        this.employee = employee;
     }
 }
