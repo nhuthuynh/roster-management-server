@@ -1,5 +1,6 @@
 package com.project.cafeemployeemanagement.security;
 
+import com.project.cafeemployeemanagement.exception.AppException;
 import io.jsonwebtoken.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,6 +23,10 @@ public class JwtTokenProvider {
     public String generateToken(Authentication authentication) {
 
         UserPrincipal userPrincipal = (UserPrincipal) authentication.getPrincipal();
+
+        if (userPrincipal.isResigned()) {
+            throw new AppException("You cannot access to resigned employee account!");
+        }
 
         Date now = new Date();
         Date expiryDate = new Date(now.getTime() + jwtExpirationInMs);
