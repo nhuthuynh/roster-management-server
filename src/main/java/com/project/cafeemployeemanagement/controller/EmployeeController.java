@@ -1,13 +1,15 @@
 package com.project.cafeemployeemanagement.controller;
 
-import com.project.cafeemployeemanagement.payload.ApiResponse;
-import com.project.cafeemployeemanagement.payload.EmployeeResponse;
-import com.project.cafeemployeemanagement.payload.ResignEmployeeRequest;
+import com.project.cafeemployeemanagement.model.Employee;
+import com.project.cafeemployeemanagement.payload.*;
 import com.project.cafeemployeemanagement.repository.EmployeeRepository;
 import com.project.cafeemployeemanagement.security.CurrentUser;
+import com.project.cafeemployeemanagement.security.JwtTokenProvider;
 import com.project.cafeemployeemanagement.security.UserPrincipal;
+import com.project.cafeemployeemanagement.service.AuthService;
 import com.project.cafeemployeemanagement.service.EmployeeService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -23,6 +25,12 @@ public class EmployeeController {
 
     @Autowired
     EmployeeService employeeService;
+
+    @Autowired
+    AuthService authService;
+
+    @Autowired
+    JwtTokenProvider jwtTokenProvider;
 
     @GetMapping("/load")
     public @ResponseBody
@@ -69,4 +77,33 @@ public class EmployeeController {
 
         return new ApiResponse(true, "Employees updated!");
     }
+
+    @PostMapping("/resetPassword")
+    public ApiResponse resetPassword(@Valid @RequestParam("email") String employeeEmail ) {
+        employeeService.resetPassword(employeeEmail);
+        return new ApiResponse(true, "Please check your email!");
+    }
+
+    @PostMapping("/changePassword")
+    public ApiResponse changePassword(@Valid @RequestBody ChangePasswordRequest changePasswordRequest) {
+        employeeService.changePassword(changePasswordRequest);
+        return new ApiResponse(true, "Password is changed!");
+    }
+
+    @PostMapping("/updateProfile")
+    public ApiResponse updateProfile(@Valid @RequestBody ProfileRequest profileRequest) {
+        employeeService.updateProfile(profileRequest);
+        return new ApiResponse(true, "Profile is updated!");
+    }
+
+    @GetMapping("/loadProfile")
+    public ProfileResponse loadProfile(@RequestParam("employeeId") long employeeId) {
+        return employeeService.loadProfile(employeeId);
+    }
+
+    /*@GetMapping("/changePasswordWithToken")
+    public ResponseEntity<?> changePasswordWithToken(@RequestParam("employeeId") long employeeId, @RequestParam("token") String token) {
+        authService.validatePasswordResetToken(employeeId, token);
+        return
+    }*/
 }

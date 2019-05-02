@@ -1,17 +1,11 @@
 package com.project.cafeemployeemanagement.service;
 
-import com.project.cafeemployeemanagement.model.EmployeeType;
 import com.project.cafeemployeemanagement.model.EmployeeTypeValues;
 import com.project.cafeemployeemanagement.model.RoleName;
 import org.springframework.stereotype.Service;
 
 @Service
 public class UtilsService {
-
-    public boolean isValidPhonumber(String phoneNumber) {
-
-        return true;
-    }
 
     public RoleName getRoleName(String name) {
         if (name.equalsIgnoreCase(RoleName.ROLE_ADMIN.toString())) {
@@ -31,5 +25,9 @@ public class UtilsService {
         }
 
         return EmployeeTypeValues.FULL_TIME;
+    }
+
+    public String getAppUrl() {
+        return "";
     }
 }
