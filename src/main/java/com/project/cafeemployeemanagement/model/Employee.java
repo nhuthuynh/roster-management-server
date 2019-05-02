@@ -23,6 +23,8 @@ public class Employee implements Serializable {
 
     private String email;
 
+    private String address;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "role_id")
     private Role role;
@@ -225,7 +227,13 @@ public class Employee implements Serializable {
         this.joinedDate = joinedDate;
     }
 
+    public String getAddress() {
+        return address;
+    }
 
+    public void setAddress(String address) {
+        this.address = address;
+    }
 
     @Override
     public boolean equals(Object o) {
