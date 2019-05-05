@@ -17,6 +17,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
 import java.util.UUID;
 
@@ -50,13 +51,15 @@ public class EmployeeService implements UserDetailsService {
     @Override
     @Transactional
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        Employee employee = employeeRepository.findByEmail(email)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found with username or email: " + email));
+        Employee employee = employeeRepository.findByEmail(email);
+        if (employee == null) throw new UsernameNotFoundException("Email is not found!");
         return UserPrincipal.create(employee);
     }
 
-    public Employee loadByEmail(String employeeEmail) {
-        return employeeRepository.findByEmail(employeeEmail).orElseThrow(() -> new AppException("Employee is not found!"));
+    public Employee loadByEmail(String employeeEmail) throws UsernameNotFoundException {
+        Employee employee = employeeRepository.findByEmail(employeeEmail);
+        if (employee == null) throw new UsernameNotFoundException("Email is not found!");
+        return employee;
     }
 
     public Employee loadById(Long employeeId) {
@@ -111,6 +114,12 @@ public class EmployeeService implements UserDetailsService {
         }
     }
 
+    public void savePassword(ChangePasswordWithTokenRequest changePasswordWithTokenRequest) {
+        Employee employee = loadById(changePasswordWithTokenRequest.getEmployeeId());
+        employee.setPassword(passwordEncoder.encode(changePasswordWithTokenRequest.getPassword()));
+        employeeRepository.save(employee);
+    }
+
     private boolean isValidPassword(final Employee employee, final String password) {
         return passwordEncoder.matches(password, employee.getPassword());
     }
@@ -143,15 +152,11 @@ public class EmployeeService implements UserDetailsService {
         passwordResetTokenRepository.save(new PasswordResetToken(token, employee));
     }
 
-    public void resetPassword(String employeeEmail) {
+    public void resetPassword(HttpServletRequest httpServletRequest, String employeeEmail) {
         Employee employee = loadByEmail(employeeEmail);
         String token = UUID.randomUUID().toString();
         createPasswordResetTokenForEmployee(employee, token);
-        //mailService.getJavaMailSender().send(mailService.constructResetPasswordEmail(token, employee));
-    }
-
-    public Employee getEmployeeByPasswordResetToken(String token) {
-        return passwordResetTokenRepository.findByToken(token).getEmployee();
+        mailService.getJavaMailSender().send(mailService.constructResetPasswordEmail(utilsService.getAppUrl(httpServletRequest), token, employee));
     }
 
 }

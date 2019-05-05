@@ -1,11 +1,21 @@
 package com.project.cafeemployeemanagement.service;
 
+import com.project.cafeemployeemanagement.constant.Constants;
 import com.project.cafeemployeemanagement.model.EmployeeTypeValues;
 import com.project.cafeemployeemanagement.model.RoleName;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+
+import javax.servlet.http.HttpServletRequest;
 
 @Service
 public class UtilsService {
+
+    @Value("${app.web.protocol}")
+    private String protocol;
+
+    @Value("${app.mail.client.port}")
+    private String clientPort;
 
     public RoleName getRoleName(String name) {
         if (name.equalsIgnoreCase(RoleName.ROLE_ADMIN.toString())) {
@@ -27,7 +37,8 @@ public class UtilsService {
         return EmployeeTypeValues.FULL_TIME;
     }
 
-    public String getAppUrl() {
-        return "";
+
+    public String getAppUrl(HttpServletRequest request) {
+        return protocol + request.getServerName() + ":" + clientPort + request.getContextPath();
     }
 }

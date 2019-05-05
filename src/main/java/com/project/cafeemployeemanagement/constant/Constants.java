@@ -23,4 +23,11 @@ public final class Constants { // final make this class non-extendable
     public static String TIME_FORMAT = "HH:mm";
     public static String DATE_TIME_FORMAT = "dd-MM-yyyy HH:mm";
 
+    public static String REQUEST_HEADER_RESET_PASSWORD_TOKEN = "resetPasswordToken";
+    public static String HTTP_HEADER_AUTHORIZATION_NAME = "Authorization";
+    public static String BEARER_TOKEN_NAME = "Bearer ";
+    public static String REQUEST_HEADER_EMPLOYEE_ID = "employeeId";
+
+    public static String PRIVILEGE_VALUES_CHANGE_PASSWORD = "CHANGE_PASSWORD_PRIVILEGE";
+
 }

@@ -81,13 +81,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                         "/**/*.css",
                         "/**/*.js")
                 .permitAll()
-                .antMatchers("/api/auth/**")
-                .permitAll()
-                .antMatchers("/employee/updatePassword*",
-                        "/employee/savePassword*",
-                        "/updatePassword*")
-                .hasAuthority("CHANGE_PASSWORD_PRIVILEGE")
-                .antMatchers("/api/user/checkUsernameAvailability", "/api/user/checkEmailAvailability")
+                .antMatchers("/api/auth/**", "/api/employee/resetPassword", "/api/employee/changePasswordWithToken")
                 .permitAll()
                 .anyRequest()
                 .authenticated();

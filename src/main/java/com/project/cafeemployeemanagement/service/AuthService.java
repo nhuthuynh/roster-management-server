@@ -1,5 +1,6 @@
 package com.project.cafeemployeemanagement.service;
 
+import com.project.cafeemployeemanagement.constant.Constants;
 import com.project.cafeemployeemanagement.exception.AppException;
 import com.project.cafeemployeemanagement.model.Employee;
 import com.project.cafeemployeemanagement.model.PasswordResetToken;
@@ -13,7 +14,9 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
@@ -31,7 +34,10 @@ public class AuthService {
     JwtTokenProvider tokenProvider;
 
     @Autowired
-    private PasswordResetTokenRepository passwordTokenRepository;
+    private PasswordResetTokenRepository passwordResetTokenRepository;
+
+    @Autowired
+    private EmployeeService employeeService;
 
     public Authentication authenticateUser(LoginRequest loginRequest) {
         return authenticationManager
@@ -46,14 +52,10 @@ public class AuthService {
         return SecurityContextHolder.getContext().getAuthentication();
     }
 
-    public String getTokenFromAuthenticatedUser() {
-        return tokenProvider.generateToken(getAuthenticationFromAuthenticatedUser());
-    }
+    public boolean authenticateResetPasswordTokenOfEmployee(String token, Long employeeId) {
+        final PasswordResetToken passwordResetToken = passwordResetTokenRepository.findByToken(token);
 
-    public String validatePasswordResetToken(long id, String token) {
-        final PasswordResetToken passwordResetToken = passwordTokenRepository.findByToken(token);
-
-        if (passwordResetToken == null || passwordResetToken.getEmployee().getId() != id) {
+        if (passwordResetToken == null || passwordResetToken.getEmployee().getId() != employeeId) {
             throw new AppException("Invalid token!");
         }
 
@@ -62,10 +64,6 @@ public class AuthService {
             throw new AppException("Token is expired!");
         }
 
-        final Employee user = passwordResetToken.getEmployee();
-        final Authentication auth = new UsernamePasswordAuthenticationToken(user, null, Arrays.asList(new SimpleGrantedAuthority("CHANGE_PASSWORD_PRIVILEGE")));
-        SecurityContextHolder.getContext().setAuthentication(auth);
-        return null;
+        return true;
     }
-
 }

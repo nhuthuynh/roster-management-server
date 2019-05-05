@@ -1,6 +1,5 @@
 package com.project.cafeemployeemanagement.controller;
 
-import com.project.cafeemployeemanagement.model.Employee;
 import com.project.cafeemployeemanagement.payload.*;
 import com.project.cafeemployeemanagement.repository.EmployeeRepository;
 import com.project.cafeemployeemanagement.security.CurrentUser;
@@ -11,8 +10,11 @@ import com.project.cafeemployeemanagement.service.EmployeeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.net.URI;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -79,8 +81,8 @@ public class EmployeeController {
     }
 
     @PostMapping("/resetPassword")
-    public ApiResponse resetPassword(@Valid @RequestParam("email") String employeeEmail ) {
-        employeeService.resetPassword(employeeEmail);
+    public ApiResponse resetPassword(final HttpServletRequest httpServletRequest, @RequestBody final ResetPasswordRequest resetPasswordRequest) {
+        employeeService.resetPassword(httpServletRequest, resetPasswordRequest.getEmail());
         return new ApiResponse(true, "Please check your email!");
     }
 
@@ -101,9 +103,12 @@ public class EmployeeController {
         return employeeService.loadProfile(employeeId);
     }
 
-    /*@GetMapping("/changePasswordWithToken")
-    public ResponseEntity<?> changePasswordWithToken(@RequestParam("employeeId") long employeeId, @RequestParam("token") String token) {
-        authService.validatePasswordResetToken(employeeId, token);
-        return
-    }*/
+    @PostMapping("/changePasswordWithToken")
+    public ResponseEntity<?> changePasswordWithToken(@Valid @RequestBody ChangePasswordWithTokenRequest changePasswordWithTokenRequest) {
+        if (authService.authenticateResetPasswordTokenOfEmployee(changePasswordWithTokenRequest.getToken(), changePasswordWithTokenRequest.getEmployeeId())) {
+            employeeService.savePassword(changePasswordWithTokenRequest);
+            return ResponseEntity.ok().body(new ApiResponse(true, "Reset password successfully!"));
+        }
+        return ResponseEntity.badRequest().body(new ApiResponse(false, "Failed to reset password!"));
+    }
 }

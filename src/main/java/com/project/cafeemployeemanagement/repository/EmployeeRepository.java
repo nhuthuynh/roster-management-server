@@ -14,12 +14,11 @@ import java.util.Optional;
 
 @Repository
 public interface EmployeeRepository extends JpaRepository<Employee, Long> {
-    Optional<Employee> findByEmail(String email);
+    Employee findByEmail(String email);
 
     Boolean existsByEmail(String email);
 
-    @Query("SELECT e FROM Employee AS e WHERE e.shopOwnerId = :shopOwnerId")
-    List<Employee> findByShopOwnerId(@Param("shopOwnerId") Long shopOwnerId);
+    List<Employee> findByShopOwnerId(Long shopOwnerId);
 
     @Modifying
     @Query("UPDATE Employee AS e SET e.isResigned = true WHERE e.id in :employeeList")
