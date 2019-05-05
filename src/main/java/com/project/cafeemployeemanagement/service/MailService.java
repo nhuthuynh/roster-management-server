@@ -70,8 +70,8 @@ public class MailService {
     }
 
     public SimpleMailMessage constructResetPasswordEmail(String contextPath, String token, Employee employee) {
-        final String url = contextPath + "/employee/changePassword?id=" + employee.getId() + "&token=" + token;
-        final String message = "Please click the following link to change your password.";
+        final String url = contextPath + "/resetPassword?employeeId=" + employee.getId() + "&token=" + token;
+        final String message = "Hi," + employee.getFirstName() + "\r\n" + "Forgot your password? Just reset your password by clicking the following link.";
         return constructEmail("Reset Password", message + " \r\n" + url, employee);
     }
 
