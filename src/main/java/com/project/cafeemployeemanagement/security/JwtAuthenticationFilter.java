@@ -1,10 +1,13 @@
 package com.project.cafeemployeemanagement.security;
 
+import com.project.cafeemployeemanagement.constant.Constants;
+import com.project.cafeemployeemanagement.service.AuthService;
 import com.project.cafeemployeemanagement.service.EmployeeService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
@@ -32,7 +35,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                                     HttpServletResponse response,
                                     FilterChain filterChain) throws ServletException, IOException, IOException {
         try {
-            String jwt = getJwtFromRequest(request);
+            String jwt = getTokenFromRequest(request, Constants.BEARER_TOKEN_NAME);
 
             if (StringUtils.hasText(jwt) && tokenProvider.validateToken(jwt)) {
                 Long userId = tokenProvider.getUserIdFromJWT(jwt);
@@ -50,10 +53,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         filterChain.doFilter(request, response);
     }
 
-    private String getJwtFromRequest(HttpServletRequest request) {
-        String bearerToken = request.getHeader("Authorization");
-        if (StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer ")) {
-            return bearerToken.substring(7, bearerToken.length());
+    private String getTokenFromRequest(HttpServletRequest request, String tokenType) {
+        String token = request.getHeader(Constants.HTTP_HEADER_AUTHORIZATION_NAME);
+        if (StringUtils.hasText(token) && token.startsWith(tokenType)) {
+            return token.substring(tokenType.length());
         }
         return null;
     }
