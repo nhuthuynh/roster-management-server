@@ -10,11 +10,11 @@ import java.util.Date;
 public class EmployeeShiftRequest {
 
     @Temporal(TemporalType.TIMESTAMP)
-    @JsonDeserialize(using= CustomTimeDeserialize.class)
+    @JsonDeserialize(using = CustomTimeDeserialize.class)
     private Date startTime;
 
     @Temporal(TemporalType.TIMESTAMP)
-    @JsonDeserialize(using= CustomTimeDeserialize.class)
+    @JsonDeserialize(using = CustomTimeDeserialize.class)
     private Date endTime;
 
     private Long employeeId;

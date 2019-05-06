@@ -15,7 +15,7 @@ public class RoleService {
 
     @Transactional
     public void initRoles() {
-        if(roleRepository.findAll().isEmpty()) {
+        if (roleRepository.findAll().isEmpty()) {
             roleRepository.save(new Role(RoleName.ROLE_ADMIN));
             roleRepository.save(new Role(RoleName.ROLE_EMPLOYEE));
             roleRepository.save(new Role(RoleName.ROLE_MANAGER));

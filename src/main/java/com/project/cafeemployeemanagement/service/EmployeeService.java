@@ -1,15 +1,16 @@
 package com.project.cafeemployeemanagement.service;
 
 import com.project.cafeemployeemanagement.exception.AppException;
-
-import com.project.cafeemployeemanagement.model.*;
+import com.project.cafeemployeemanagement.model.Employee;
+import com.project.cafeemployeemanagement.model.EmployeeType;
+import com.project.cafeemployeemanagement.model.PasswordResetToken;
+import com.project.cafeemployeemanagement.model.Role;
 import com.project.cafeemployeemanagement.payload.*;
+import com.project.cafeemployeemanagement.repository.EmployeeRepository;
 import com.project.cafeemployeemanagement.repository.EmployeeTypeRepository;
 import com.project.cafeemployeemanagement.repository.PasswordResetTokenRepository;
 import com.project.cafeemployeemanagement.repository.RoleRepository;
-
 import com.project.cafeemployeemanagement.security.UserPrincipal;
-import com.project.cafeemployeemanagement.repository.EmployeeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -77,10 +78,10 @@ public class EmployeeService implements UserDetailsService {
     public Employee signUpUser(SignUpRequest signUpRequest) {
         EmployeeType empType = employeeTypeRepository
                 .findByType(utilsService.getEmployeeType(signUpRequest.getType()))
-                .orElseThrow(()-> new AppException("Employee Type has not defined!"));
+                .orElseThrow(() -> new AppException("Employee Type has not defined!"));
         Role role = roleRepository
                 .findByName(utilsService.getRoleName(signUpRequest.getRole()))
-                .orElseThrow(()-> new AppException("Employee Role has not defined!"));
+                .orElseThrow(() -> new AppException("Employee Role has not defined!"));
         String password = passwordEncoder.encode(signUpRequest.getPassword());
         Employee emp = new Employee(signUpRequest.getFirstName(), signUpRequest.getLastName(), signUpRequest.getPhoneNumber(), signUpRequest.getEmail(), password, 0, signUpRequest.getShopOwnerId(), false);
 
@@ -97,10 +98,7 @@ public class EmployeeService implements UserDetailsService {
     @Transactional
     public boolean resignEmployees(ResignEmployeeRequest resignEmployeeRequest) {
         int numberOfUpdatedEmployees = employeeRepository.resignEmployees(resignEmployeeRequest.getEmployeesIdList());
-        if(resignEmployeeRequest.getEmployeesIdList().size() == numberOfUpdatedEmployees) {
-            return true;
-        }
-        return false;
+        return resignEmployeeRequest.getEmployeesIdList().size() == numberOfUpdatedEmployees;
     }
 
     public void changePassword(ChangePasswordRequest changePasswordRequest) {

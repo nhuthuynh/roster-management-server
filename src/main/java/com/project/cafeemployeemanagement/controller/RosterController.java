@@ -7,8 +7,6 @@ import com.project.cafeemployeemanagement.payload.RosterResponse;
 import com.project.cafeemployeemanagement.repository.EmployeeRepository;
 import com.project.cafeemployeemanagement.repository.RosterRepository;
 import com.project.cafeemployeemanagement.service.RosterService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
@@ -35,12 +33,12 @@ public class RosterController {
         rosterService.deleteRoster(rosterRequest.getId());
         if (rosterService.createRoster(rosterRequest))
             return ResponseEntity.ok().body(new ApiResponse(true, "Roster created successfully!"));
-        return  ResponseEntity.badRequest().body(new ApiResponse(false, "create roster failed!"));
+        return ResponseEntity.badRequest().body(new ApiResponse(false, "create roster failed!"));
     }
 
     @GetMapping("/load")
     public @ResponseBody
-    RosterResponse loadRoster(@RequestParam("from") @DateTimeFormat(pattern="dd-MM-yyyy") Date fromDate, @RequestParam("to") @DateTimeFormat(pattern="dd-MM-yyyy") Date toDate, @RequestParam("shopOwnerId") Long employeeId) {
+    RosterResponse loadRoster(@RequestParam("from") @DateTimeFormat(pattern = "dd-MM-yyyy") Date fromDate, @RequestParam("to") @DateTimeFormat(pattern = "dd-MM-yyyy") Date toDate, @RequestParam("shopOwnerId") Long employeeId) {
         Roster roster = rosterRepository.findByDates(fromDate, toDate, employeeId);
         if (roster == null) {
             return new RosterResponse();

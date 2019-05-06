@@ -10,11 +10,9 @@ import com.project.cafeemployeemanagement.service.EmployeeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
-import java.net.URI;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -67,13 +65,13 @@ public class EmployeeController {
                         currentUser.getShopOwnerId(),
                         currentUser.getPhoneNumber(),
                         currentUser.isResigned()
-                        );
+                );
         return employeeResponse;
     }
 
     @PostMapping("/resign")
     public ApiResponse resignEmployees(@Valid @RequestBody ResignEmployeeRequest resignEmployeeRequest) {
-        if(!employeeService.resignEmployees(resignEmployeeRequest)) {
+        if (!employeeService.resignEmployees(resignEmployeeRequest)) {
             return new ApiResponse(false, "Fail to update employees!");
         }
 

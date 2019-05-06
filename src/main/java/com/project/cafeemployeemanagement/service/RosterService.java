@@ -11,29 +11,23 @@ import com.project.cafeemployeemanagement.repository.EmployeeShiftRepository;
 import com.project.cafeemployeemanagement.repository.RosterRepository;
 import com.project.cafeemployeemanagement.repository.ShiftRepository;
 import com.project.cafeemployeemanagement.util.ModelMapper;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class RosterService {
     @Autowired
     RosterRepository rosterRepository;
-
     @Autowired
     ShiftRepository shiftRepository;
-
     @Autowired
     EmployeeShiftRepository employeeShiftRepository;
-
     @Autowired
     EmployeeRepository employeeRepository;
-
-    private static final Logger logger = LoggerFactory.getLogger(RosterService.class);
 
     @Transactional
     public boolean createRoster(RosterRequest rosterRequest) {

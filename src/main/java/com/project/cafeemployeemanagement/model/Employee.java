@@ -53,63 +53,23 @@ public class Employee implements Serializable {
             orphanRemoval = true)
     private List<Roster> rostersList = new ArrayList<>();
 
+    @ManyToMany(cascade = {CascadeType.ALL})
+    @JoinTable(name = "employee_leave_request",
+            joinColumns = {@JoinColumn(name = "employee_id")},
+            inverseJoinColumns = {@JoinColumn(name = "leave_request_id")}
+    )
+    private Set<LeaveRequest> leaveRequests = new HashSet<>();
+
     public List<Roster> getRostersList() {
         return rostersList;
-    }
-
-    public void setRostersList(Roster roster) {
-        this.rostersList.add(roster);
-        roster.setEmployee(this);
-    }
-
-    public void removeRoster(Roster roster) {
-        this.rostersList.remove(roster);
-        roster.setEmployee(null);
     }
 
     public List<Availability> getAvailabilityList() {
         return availabilityList;
     }
 
-    public void setAvailabilityList(List<Availability> availabilityList) {
-        this.availabilityList.clear();
-
-        if (availabilityList == null || availabilityList.isEmpty()) {
-            return;
-        }
-
-        availabilityList.forEach(availability -> availability.setEmployee(this));
-        this.availabilityList.addAll(availabilityList);
-    }
-
-    public void addAvailability(Availability availability) {
-        this.availabilityList.add(availability);
-        availability.setEmployee(this);
-    }
-
-    public void removeAvailability(Availability availability) {
-        this.availabilityList.remove(availability);
-        availability.setEmployee(null);
-    }
-
     public Long getShopOwnerId() {
         return shopOwnerId;
-    }
-
-    public void setShopOwnerId(Long shopOwnerId) {
-        this.shopOwnerId = shopOwnerId;
-    }
-
-    public void addEmployeeShift(EmployeeShift employeeShift, Employee employee) {
-        employeeShift.setEmployee(employee);
-        employeeShift.setEmployee(this);
-        employeeShifts.add(employeeShift);
-    }
-
-    public void removeEmployeeShift(EmployeeShift employeeShift) {
-        employeeShifts.remove(employeeShift);
-        employeeShift.setShift(null);
-        employeeShift.setEmployee(null);
     }
 
     private boolean isResigned;
@@ -209,6 +169,53 @@ public class Employee implements Serializable {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public void setRostersList(Roster roster) {
+        this.rostersList.add(roster);
+        roster.setEmployee(this);
+    }
+
+    public void removeRoster(Roster roster) {
+        this.rostersList.remove(roster);
+        roster.setEmployee(null);
+    }
+
+    public void setShopOwnerId(Long shopOwnerId) {
+        this.shopOwnerId = shopOwnerId;
+    }
+
+    public void addEmployeeShift(EmployeeShift employeeShift, Employee employee) {
+        employeeShift.setEmployee(employee);
+        employeeShift.setEmployee(this);
+        employeeShifts.add(employeeShift);
+    }
+
+    public void removeEmployeeShift(EmployeeShift employeeShift) {
+        employeeShifts.remove(employeeShift);
+        employeeShift.setShift(null);
+        employeeShift.setEmployee(null);
+    }
+
+    public void setAvailabilityList(List<Availability> availabilityList) {
+        this.availabilityList.clear();
+
+        if (availabilityList == null || availabilityList.isEmpty()) {
+            return;
+        }
+
+        availabilityList.forEach(availability -> availability.setEmployee(this));
+        this.availabilityList.addAll(availabilityList);
+    }
+
+    public void addAvailability(Availability availability) {
+        this.availabilityList.add(availability);
+        availability.setEmployee(this);
+    }
+
+    public void removeAvailability(Availability availability) {
+        this.availabilityList.remove(availability);
+        availability.setEmployee(null);
     }
 
     public boolean isResigned() {

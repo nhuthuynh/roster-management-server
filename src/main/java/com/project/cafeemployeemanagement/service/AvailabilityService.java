@@ -53,18 +53,15 @@ public class AvailabilityService {
     }
 
     @Transactional
-    public boolean saveAvailabilities(AvailabilityRequest availabilityRequest){
+    public boolean saveAvailabilities(AvailabilityRequest availabilityRequest) {
         List<Availability> availabilities = new ArrayList<>();
         Employee employee = employeeRepository.findById(availabilityRequest.getEmployeeId()).orElseThrow(() -> new AppException("Cannot find employee!"));
         availabilityRequest.getAvailabilityList().forEach(availability -> {
             availabilities.add(new Availability(availability.getId(), availability.getDay(), availability.getStartHour(), availability.getStartMinute(), availability.getEndHour(), availability.getEndMinute(), availability.isAvailable(), employee));
         });
 
-        if(availabilityRepository.saveAll(availabilities).size() > 0) {
-            return true;
-        }
+        return availabilityRepository.saveAll(availabilities).size() > 0;
 
-        return false;
     }
 
 }
