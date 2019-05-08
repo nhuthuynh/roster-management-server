@@ -5,6 +5,7 @@ import com.project.cafeemployeemanagement.constant.Constants;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.concurrent.TimeUnit;
 
 public class utils {
     private static SimpleDateFormat simpleDateFormat = new SimpleDateFormat();
@@ -33,6 +34,21 @@ public class utils {
             pe.printStackTrace();
         }
         return null;
+    }
+
+    public static long getNumberOfDifferentDatesBetweenTwoLeaveDates(final Date fromDate, final Date toDate) {
+        long diffDates;
+        long diffInMillies = Math.abs(toDate.getTime() - fromDate.getTime());
+        diffDates = TimeUnit.DAYS.convert(diffInMillies, TimeUnit.MILLISECONDS);
+        // if the difference is 0, it means that employee take a day leave
+        return diffDates == 0 ? 1 : diffDates;
+    }
+
+    public static long getNumberOfDifferentHoursBetweenTwoWorkingHours(final Date startTime, final Date endTime) {
+        long diffHours;
+        long diffInMillies = Math.abs(endTime.getTime() - startTime.getTime());
+        diffHours = TimeUnit.HOURS.convert(diffInMillies, TimeUnit.MILLISECONDS);
+        return diffHours;
     }
 
 }

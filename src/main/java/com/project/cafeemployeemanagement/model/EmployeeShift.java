@@ -2,6 +2,7 @@ package com.project.cafeemployeemanagement.model;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.project.cafeemployeemanagement.util.CustomTimeDeserialize;
+import com.project.cafeemployeemanagement.util.utils;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -9,7 +10,7 @@ import java.util.Objects;
 
 @Entity
 @Table(name = "employee_shift")
-public class    EmployeeShift {
+public class EmployeeShift {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -29,6 +30,8 @@ public class    EmployeeShift {
     @Temporal(TemporalType.TIMESTAMP)
     @JsonDeserialize(using= CustomTimeDeserialize.class)
     private Date endTime;
+
+    private float workedHours;
 
     private String note;
 
@@ -94,6 +97,14 @@ public class    EmployeeShift {
 
     public void setNote(String note) {
         this.note = note;
+    }
+
+    public float getWorkedHours() {
+        return utils.getNumberOfDifferentHoursBetweenTwoWorkingHours(this.startTime, this.endTime);
+    }
+
+    public void setWorkedHours(float workedHours) {
+        this.workedHours = workedHours;
     }
 
     @Override

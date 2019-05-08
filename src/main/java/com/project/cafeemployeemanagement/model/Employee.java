@@ -1,14 +1,15 @@
 package com.project.cafeemployeemanagement.model;
 
 import javax.persistence.*;
-import java.io.Serializable;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 @Entity
 @Table(name = "employee", uniqueConstraints = {
         @UniqueConstraint(columnNames = "email")
 })
-public class Employee implements Serializable {
+public class Employee {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -53,12 +54,18 @@ public class Employee implements Serializable {
             orphanRemoval = true)
     private List<Roster> rostersList = new ArrayList<>();
 
-    @ManyToMany(cascade = {CascadeType.ALL})
-    @JoinTable(name = "employee_leave_request",
-            joinColumns = {@JoinColumn(name = "employee_id")},
-            inverseJoinColumns = {@JoinColumn(name = "leave_request_id")}
-    )
-    private Set<LeaveRequest> leaveRequests = new HashSet<>();
+    @OneToMany(
+            mappedBy = "employee",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true)
+    private List<LeaveRequest> leaveRequests = new ArrayList<>();
+
+    private int annualLeaveBalance = 0;
+
+    private boolean isResigned;
+
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date joinedDate;
 
     public List<Roster> getRostersList() {
         return rostersList;
@@ -71,11 +78,6 @@ public class Employee implements Serializable {
     public Long getShopOwnerId() {
         return shopOwnerId;
     }
-
-    private boolean isResigned;
-
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date joinedDate;
 
     public Employee() {}
 
@@ -240,6 +242,32 @@ public class Employee implements Serializable {
 
     public void setAddress(String address) {
         this.address = address;
+    }
+
+    public int getAnnualLeaveBalance() {
+        return annualLeaveBalance;
+    }
+
+    public void setAnnualLeaveBalance(int annualLeaveBalance) {
+        this.annualLeaveBalance = annualLeaveBalance;
+    }
+
+    public List<LeaveRequest> getLeaveRequests() {
+        return leaveRequests;
+    }
+
+    public void setLeaveRequests(List<LeaveRequest> leaveRequests) {
+        this.leaveRequests = leaveRequests;
+    }
+
+    public void addLeaveRequests(LeaveRequest leaveRequest) {
+        this.leaveRequests.add(leaveRequest);
+        leaveRequest.setEmployee(this);
+    }
+
+    public void removeLeaveRequests(LeaveRequest leaveRequest) {
+        this.leaveRequests.remove(leaveRequest);
+        leaveRequest.setEmployee(null);
     }
 
     @Override

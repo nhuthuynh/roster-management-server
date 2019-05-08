@@ -1,9 +1,11 @@
 package com.project.cafeemployeemanagement.model;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.project.cafeemployeemanagement.util.CustomTimeDeserialize;
+import com.project.cafeemployeemanagement.util.utils;
+
 import javax.persistence.*;
 import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
 
 @Entity
 @Table(name="leave_request")
@@ -12,22 +14,117 @@ public class LeaveRequest {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Temporal(TemporalType.TIMESTAMP)
+    @JsonDeserialize(using= CustomTimeDeserialize.class)
     private Date fromDate;
 
+    @Temporal(TemporalType.TIMESTAMP)
+    @JsonDeserialize(using= CustomTimeDeserialize.class)
     private Date toDate;
 
-    private LeaveStatus leaveStatus;
+    private Long numberOfOffDates;
+
+    private LeaveStatus status;
 
     private LeaveType leaveType;
 
-    @ManyToMany(mappedBy = "leave_requests")
-    private Set<Employee> employees = new HashSet<>();
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="employee_id")
+    private Employee employee;
 
-    private Long updatedByManagerId;
+    private Long updatedManagerId;
 
     private String note;
 
+    @Temporal(TemporalType.TIMESTAMP)
+    @JsonDeserialize(using= CustomTimeDeserialize.class)
     private Date createdDate;
 
+    @Temporal(TemporalType.TIMESTAMP)
+    @JsonDeserialize(using= CustomTimeDeserialize.class)
     private Date updatedDate;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Date getFromDate() {
+        return fromDate;
+    }
+
+    public void setFromDate(Date fromDate) {
+        this.fromDate = fromDate;
+    }
+
+    public Date getToDate() {
+        return toDate;
+    }
+
+    public void setToDate(Date toDate) {
+        this.toDate = toDate;
+    }
+
+    public LeaveStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(LeaveStatus leaveStatus) {
+        this.status = leaveStatus;
+    }
+
+    public LeaveType getLeaveType() {
+        return leaveType;
+    }
+
+    public void setLeaveType(LeaveType leaveType) {
+        this.leaveType = leaveType;
+    }
+
+    public Employee getEmployee() {
+        return employee;
+    }
+
+    public void setEmployee(Employee employee) {
+        this.employee = employee;
+    }
+
+    public Long getUpdatedManagerId() {
+        return updatedManagerId;
+    }
+
+    public void setUpdatedManagerId(Long updatedManagerId) {
+        this.updatedManagerId = updatedManagerId;
+    }
+
+    public String getNote() {
+        return note;
+    }
+
+    public void setNote(String note) {
+        this.note = note;
+    }
+
+    public Date getCreatedDate() {
+        return createdDate;
+    }
+
+    public void setCreatedDate(Date createdDate) {
+        this.createdDate = createdDate;
+    }
+
+    public Date getUpdatedDate() {
+        return updatedDate;
+    }
+
+    public void setUpdatedDate(Date updatedDate) {
+        this.updatedDate = updatedDate;
+    }
+
+    public long getNumberOfOffDates() {
+        return utils.getNumberOfDifferentDatesBetweenTwoLeaveDates(this.getFromDate(), this.getToDate());
+    }
 }
