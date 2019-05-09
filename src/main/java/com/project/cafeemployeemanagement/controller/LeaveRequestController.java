@@ -1,10 +1,13 @@
 package com.project.cafeemployeemanagement.controller;
 
 import com.project.cafeemployeemanagement.payload.ApiResponse;
+import com.project.cafeemployeemanagement.payload.EmployeeLeaveInfoResponse;
 import com.project.cafeemployeemanagement.payload.SubmitLeaveRequest;
 import com.project.cafeemployeemanagement.payload.UpdateLeaveRequest;
 import com.project.cafeemployeemanagement.service.LeaveRequestService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -31,5 +34,12 @@ public class LeaveRequestController {
     public ApiResponse denyLeaveRequest(@Valid @RequestBody UpdateLeaveRequest leaveRequest) {
         leaveRequestService.denyLeaveRequest(leaveRequest);
         return new ApiResponse(true, "Deny leave request successfully!");
+    }
+
+    @GetMapping("/employee/{employeeId}")
+    public ResponseEntity<?> loadLeaveRequestsOfEmployee(@PathVariable final long employeeId) {
+        EmployeeLeaveInfoResponse employeeLeaveInfoResponse =leaveRequestService.loadLeaveRequestsOfEmployee(employeeId);
+
+        return ResponseEntity.status(HttpStatus.OK).body(employeeLeaveInfoResponse);
     }
 }

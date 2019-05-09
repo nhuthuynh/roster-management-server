@@ -6,6 +6,7 @@ import com.project.cafeemployeemanagement.model.Employee;
 import com.project.cafeemployeemanagement.model.EmployeeShift;
 import com.project.cafeemployeemanagement.model.LeaveRequest;
 import com.project.cafeemployeemanagement.model.LeaveStatus;
+import com.project.cafeemployeemanagement.payload.EmployeeLeaveInfoResponse;
 import com.project.cafeemployeemanagement.payload.SubmitLeaveRequest;
 import com.project.cafeemployeemanagement.payload.UpdateLeaveRequest;
 import com.project.cafeemployeemanagement.repository.EmployeeShiftRepository;
@@ -31,13 +32,28 @@ public class LeaveRequestService {
     @Autowired
     UtilsService utilsService;
 
+    public EmployeeLeaveInfoResponse loadLeaveRequestsOfEmployee(final long employeeId) {
+        List<LeaveRequest> leaveRequests = leaveRequestRepository.findByEmployee(employeeId);
+        EmployeeLeaveInfoResponse employeeLeaveInfoResponse = new EmployeeLeaveInfoResponse();
+
+        int pendingLeaves = leaveRequests.stream()
+                .filter( leaveRequest -> leaveRequest.getStatus() == LeaveStatus.LEAVE_PENDING)
+                .mapToInt( leaveRequest -> (int) leaveRequest.getNumberOfOffDates())
+                .sum();
+
+        employeeLeaveInfoResponse.setPendingLeave(pendingLeaves);
+        employeeLeaveInfoResponse.setLeaveBalance(getAnnualLeaveBalanceOfEmployee(employeeId));
+
+        return employeeLeaveInfoResponse;
+    }
+
     public int getAnnualLeaveBalanceOfEmployee(final long employeeId) {
         int annualLeaveBalance;
         int totalWorkedHours = getTotalWorkedHours(employeeId);
         int usedLeaves = getUsedLeaves(employeeId);
 
         annualLeaveBalance = (totalWorkedHours / Constants.NUMBER_OF_WORKED_HOURS_FOR_AN_HOUR_LEAVE) - usedLeaves;
-        return annualLeaveBalance;
+        return annualLeaveBalance < 0 ? 0 : annualLeaveBalance;
     }
 
     private int getUsedLeaves(final long employeeId) {

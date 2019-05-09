@@ -13,7 +13,7 @@ import java.util.List;
 public interface LeaveRequestRepository extends JpaRepository<LeaveRequest, Long> {
 
     @Query("SELECT l FROM LeaveRequest as l WHERE l.status = :status")
-    List<LeaveRequest> findByStatusAndDateBeforeUpdatedDate(@Param("status") LeaveStatus status);
+    List<LeaveRequest> findByStatus(@Param("status") LeaveStatus status);
 
     @Query("SELECT l FROM LeaveRequest as l WHERE l.updatedManagerId = :managerId")
     List<LeaveRequest> findByUpdatedManagerId(@Param("managerId") Long managerId);
