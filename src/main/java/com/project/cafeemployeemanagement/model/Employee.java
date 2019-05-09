@@ -1,14 +1,15 @@
 package com.project.cafeemployeemanagement.model;
 
 import javax.persistence.*;
-import java.io.Serializable;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 @Entity
 @Table(name = "employee", uniqueConstraints = {
         @UniqueConstraint(columnNames = "email")
 })
-public class Employee implements Serializable {
+public class Employee {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -53,69 +54,30 @@ public class Employee implements Serializable {
             orphanRemoval = true)
     private List<Roster> rostersList = new ArrayList<>();
 
+    @OneToMany(
+            mappedBy = "employee",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true)
+    private List<LeaveRequest> leaveRequests = new ArrayList<>();
+
+    private int annualLeaveBalance = 0;
+
+    private boolean isResigned;
+
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date joinedDate;
+
     public List<Roster> getRostersList() {
         return rostersList;
-    }
-
-    public void setRostersList(Roster roster) {
-        this.rostersList.add(roster);
-        roster.setEmployee(this);
-    }
-
-    public void removeRoster(Roster roster) {
-        this.rostersList.remove(roster);
-        roster.setEmployee(null);
     }
 
     public List<Availability> getAvailabilityList() {
         return availabilityList;
     }
 
-    public void setAvailabilityList(List<Availability> availabilityList) {
-        this.availabilityList.clear();
-
-        if (availabilityList == null || availabilityList.isEmpty()) {
-            return;
-        }
-
-        availabilityList.forEach(availability -> availability.setEmployee(this));
-        this.availabilityList.addAll(availabilityList);
-    }
-
-    public void addAvailability(Availability availability) {
-        this.availabilityList.add(availability);
-        availability.setEmployee(this);
-    }
-
-    public void removeAvailability(Availability availability) {
-        this.availabilityList.remove(availability);
-        availability.setEmployee(null);
-    }
-
     public Long getShopOwnerId() {
         return shopOwnerId;
     }
-
-    public void setShopOwnerId(Long shopOwnerId) {
-        this.shopOwnerId = shopOwnerId;
-    }
-
-    public void addEmployeeShift(EmployeeShift employeeShift, Employee employee) {
-        employeeShift.setEmployee(employee);
-        employeeShift.setEmployee(this);
-        employeeShifts.add(employeeShift);
-    }
-
-    public void removeEmployeeShift(EmployeeShift employeeShift) {
-        employeeShifts.remove(employeeShift);
-        employeeShift.setShift(null);
-        employeeShift.setEmployee(null);
-    }
-
-    private boolean isResigned;
-
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date joinedDate;
 
     public Employee() {}
 
@@ -211,6 +173,53 @@ public class Employee implements Serializable {
         this.password = password;
     }
 
+    public void setRostersList(Roster roster) {
+        this.rostersList.add(roster);
+        roster.setEmployee(this);
+    }
+
+    public void removeRoster(Roster roster) {
+        this.rostersList.remove(roster);
+        roster.setEmployee(null);
+    }
+
+    public void setShopOwnerId(Long shopOwnerId) {
+        this.shopOwnerId = shopOwnerId;
+    }
+
+    public void addEmployeeShift(EmployeeShift employeeShift, Employee employee) {
+        employeeShift.setEmployee(employee);
+        employeeShift.setEmployee(this);
+        employeeShifts.add(employeeShift);
+    }
+
+    public void removeEmployeeShift(EmployeeShift employeeShift) {
+        employeeShifts.remove(employeeShift);
+        employeeShift.setShift(null);
+        employeeShift.setEmployee(null);
+    }
+
+    public void setAvailabilityList(List<Availability> availabilityList) {
+        this.availabilityList.clear();
+
+        if (availabilityList == null || availabilityList.isEmpty()) {
+            return;
+        }
+
+        availabilityList.forEach(availability -> availability.setEmployee(this));
+        this.availabilityList.addAll(availabilityList);
+    }
+
+    public void addAvailability(Availability availability) {
+        this.availabilityList.add(availability);
+        availability.setEmployee(this);
+    }
+
+    public void removeAvailability(Availability availability) {
+        this.availabilityList.remove(availability);
+        availability.setEmployee(null);
+    }
+
     public boolean isResigned() {
         return isResigned;
     }
@@ -233,6 +242,32 @@ public class Employee implements Serializable {
 
     public void setAddress(String address) {
         this.address = address;
+    }
+
+    public int getAnnualLeaveBalance() {
+        return annualLeaveBalance;
+    }
+
+    public void setAnnualLeaveBalance(int annualLeaveBalance) {
+        this.annualLeaveBalance = annualLeaveBalance;
+    }
+
+    public List<LeaveRequest> getLeaveRequests() {
+        return leaveRequests;
+    }
+
+    public void setLeaveRequests(List<LeaveRequest> leaveRequests) {
+        this.leaveRequests = leaveRequests;
+    }
+
+    public void addLeaveRequests(LeaveRequest leaveRequest) {
+        this.leaveRequests.add(leaveRequest);
+        leaveRequest.setEmployee(this);
+    }
+
+    public void removeLeaveRequests(LeaveRequest leaveRequest) {
+        this.leaveRequests.remove(leaveRequest);
+        leaveRequest.setEmployee(null);
     }
 
     @Override

@@ -131,6 +131,10 @@ public class UserPrincipal implements UserDetails {
         return shopOwnerId;
     }
 
+    public void setShopOwnerId(Long shopOwnerId) {
+        this.shopOwnerId = shopOwnerId;
+    }
+
     public String getRole() {
         return role;
     }
@@ -153,10 +157,6 @@ public class UserPrincipal implements UserDetails {
 
     public void setType(String type) {
         this.type = type;
-    }
-
-    public void setShopOwnerId(Long shopOwnerId) {
-        this.shopOwnerId = shopOwnerId;
     }
 
     public String getPhoneNumber() {

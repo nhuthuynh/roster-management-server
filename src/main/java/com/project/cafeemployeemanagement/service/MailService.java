@@ -1,7 +1,6 @@
 package com.project.cafeemployeemanagement.service;
 
 import com.project.cafeemployeemanagement.model.Employee;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.mail.SimpleMailMessage;
@@ -75,4 +74,8 @@ public class MailService {
         return constructEmail("Reset Password", message + " \r\n" + url, employee);
     }
 
+    public SimpleMailMessage constructSignInInfoEmail(String contextPath, Employee employee, String password) {
+        final String message = "Welcome, " + employee.getFirstName() + " " + employee.getLastName() + " to CEMS!" + "\r\n" + "Here is your password: " + password + "\r\n" + "You can sign in at: " + contextPath;
+        return constructEmail("Sign In Information", message, employee);
+    }
 }

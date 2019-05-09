@@ -11,13 +11,13 @@ public class RosterRequest {
 
     private Long id;
 
-    @JsonDeserialize(using= CustomDateDeserialize.class)
+    @JsonDeserialize(using = CustomDateDeserialize.class)
     private Date fromDate;
 
-    @JsonDeserialize(using= CustomDateDeserialize.class)
+    @JsonDeserialize(using = CustomDateDeserialize.class)
     private Date toDate;
 
-    @JsonDeserialize(using= CustomDateDeserialize.class)
+    @JsonDeserialize(using = CustomDateDeserialize.class)
     private Date createdDate;
 
     private Long employeeId;

@@ -21,7 +21,7 @@ public class AvailabilityController {
     @GetMapping("/load")
     public ResponseEntity<?> loadAvailabilities(@RequestParam("employeeId") Long employeeId) {
         List<AvailabilityResponse> availabilityList = availabilityService.loadAvailabilities(employeeId);
-        if(availabilityList.size() == 0) {
+        if (availabilityList.size() == 0) {
             return ResponseEntity.badRequest().body(new ApiResponse(false, "Failed to load employee's availability"));
         }
         return ResponseEntity.ok(availabilityList);
@@ -30,7 +30,7 @@ public class AvailabilityController {
     @PostMapping("/save")
     public ResponseEntity<?> saveAvailabilities(@Valid @RequestBody AvailabilityRequest availabilityRequest) {
 
-        if(!availabilityService.saveAvailabilities(availabilityRequest)) {
+        if (!availabilityService.saveAvailabilities(availabilityRequest)) {
             return ResponseEntity.badRequest().body(new ApiResponse(false, "Failed to update!"));
         }
 

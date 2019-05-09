@@ -17,7 +17,7 @@ public class EmployeeResponse {
 
     private Long shopOwnerId;
 
-    @JsonDeserialize(using= CustomDateDeserialize.class)
+    @JsonDeserialize(using = CustomDateDeserialize.class)
     private Date joinedDate;
 
     private String type;
