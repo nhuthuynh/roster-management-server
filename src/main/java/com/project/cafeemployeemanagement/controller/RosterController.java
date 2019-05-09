@@ -37,12 +37,8 @@ public class RosterController {
     }
 
     @GetMapping("/load")
-    public @ResponseBody
-    RosterResponse loadRoster(@RequestParam("from") @DateTimeFormat(pattern = "dd-MM-yyyy") Date fromDate, @RequestParam("to") @DateTimeFormat(pattern = "dd-MM-yyyy") Date toDate, @RequestParam("shopOwnerId") Long employeeId) {
-        Roster roster = rosterRepository.findByDates(fromDate, toDate, employeeId);
-        if (roster == null) {
-            return new RosterResponse();
-        }
-        return rosterService.loadRoster(roster);
+    public ResponseEntity<?> loadRoster(@RequestParam("from") @DateTimeFormat(pattern = "dd-MM-yyyy") Date fromDate, @RequestParam("to") @DateTimeFormat(pattern = "dd-MM-yyyy") Date toDate, @RequestParam("shopOwnerId") Long shopOwnerId) {
+            RosterResponse roster = rosterService.loadRosterByDatesAndShopOwner(fromDate, toDate, shopOwnerId);
+        return ResponseEntity.ok().body(roster);
     }
 }

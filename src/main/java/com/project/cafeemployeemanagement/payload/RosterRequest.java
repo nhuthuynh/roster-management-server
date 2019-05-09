@@ -20,7 +20,7 @@ public class RosterRequest {
     @JsonDeserialize(using = CustomDateDeserialize.class)
     private Date createdDate;
 
-    private Long employeeId;
+    private Long shopOwnerId;
 
     private List<ShiftRequest> shiftList = new ArrayList<>();
 
@@ -64,11 +64,11 @@ public class RosterRequest {
         this.shiftList = shiftList;
     }
 
-    public Long getEmployeeId() {
-        return employeeId;
+    public Long getShopOwnerId() {
+        return shopOwnerId;
     }
 
-    public void setEmployeeId(Long employeeId) {
-        this.employeeId = employeeId;
+    public void setShopOwnerId(Long shopOwnerId) {
+        this.shopOwnerId = shopOwnerId;
     }
 }
