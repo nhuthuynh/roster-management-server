@@ -75,7 +75,7 @@ public class EmployeeService implements UserDetailsService {
     }
 
     @Transactional
-    public Employee signUpUser(SignUpRequest signUpRequest) {
+    public void signUpUser(HttpServletRequest httpServletRequest, SignUpRequest signUpRequest) {
         EmployeeType empType = employeeTypeRepository
                 .findByType(utilsService.getEmployeeType(signUpRequest.getType()))
                 .orElseThrow(() -> new AppException("Employee Type has not defined!"));
@@ -87,8 +87,13 @@ public class EmployeeService implements UserDetailsService {
 
         emp.setRole(role);
         emp.setEmployeeType(empType);
+        Employee employee = employeeRepository.save(emp);
 
-        return employeeRepository.save(emp);
+        if (employee == null) {
+            throw new AppException("Cannot add new employee!");
+        }
+
+        mailService.getJavaMailSender().send(mailService.constructSignInInfoEmail(utilsService.getAppUrl(httpServletRequest), employee, signUpRequest.getPassword()));
     }
 
     public boolean existsByEmail(String email) {
