@@ -1,7 +1,6 @@
 package com.project.cafeemployeemanagement.service;
 
 import com.project.cafeemployeemanagement.model.EmployeeTypeValues;
-import com.project.cafeemployeemanagement.model.LeaveType;
 import com.project.cafeemployeemanagement.model.RoleName;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -35,16 +34,6 @@ public class UtilsService {
         }
 
         return EmployeeTypeValues.FULL_TIME;
-    }
-
-    public LeaveType getLeaveType(String leaveType) {
-        if(leaveType.equalsIgnoreCase(LeaveType.ANNUAL_LEAVE.toString())) {
-            return LeaveType.ANNUAL_LEAVE;
-        } else if (leaveType.equalsIgnoreCase(LeaveType.SICK_LEAVE.toString())) {
-            return LeaveType.SICK_LEAVE;
-        }
-
-        return LeaveType.HOLIDAY_LEAVE;
     }
 
     public String getAppUrl(HttpServletRequest request) {

@@ -24,9 +24,9 @@ public class LeaveRequest {
 
     private Long numberOfOffDates;
 
+    @Enumerated(EnumType.STRING)
+    @Column(length=60)
     private LeaveStatus status;
-
-    private LeaveType leaveType;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="employee_id")
@@ -72,17 +72,7 @@ public class LeaveRequest {
         return status;
     }
 
-    public void setStatus(LeaveStatus leaveStatus) {
-        this.status = leaveStatus;
-    }
-
-    public LeaveType getLeaveType() {
-        return leaveType;
-    }
-
-    public void setLeaveType(LeaveType leaveType) {
-        this.leaveType = leaveType;
-    }
+    public void setStatus(LeaveStatus leaveStatus) { this.status = leaveStatus; }
 
     public Employee getEmployee() {
         return employee;

@@ -1,12 +1,9 @@
 package com.project.cafeemployeemanagement.payload;
 
-import javax.validation.constraints.NotBlank;
-
 public class UpdateLeaveRequest {
-    @NotBlank
+
     private Long managerId;
 
-    @NotBlank
     private Long leaveRequestId;
 
     private String note;

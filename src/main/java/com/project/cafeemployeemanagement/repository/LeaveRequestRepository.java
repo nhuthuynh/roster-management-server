@@ -23,4 +23,7 @@ public interface LeaveRequestRepository extends JpaRepository<LeaveRequest, Long
 
     @Query("SELECT l FROM LeaveRequest as l WHERE l.employee.id = :employeeId and l.status = :status")
     List<LeaveRequest> findByEmployeeAndStatus(@Param("employeeId") Long employeeId, @Param("status") LeaveStatus status);
+
+    @Query("SELECT l FROM LeaveRequest as l WHERE l.employee.shopOwnerId = :shopOwnerId and l.status = :status")
+    List<LeaveRequest> findByShopOwnerIdAndStatus(@Param("shopOwnerId") long shopOwnerId, @Param("status") LeaveStatus status);
 }
