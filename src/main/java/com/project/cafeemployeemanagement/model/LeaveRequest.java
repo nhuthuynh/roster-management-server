@@ -3,7 +3,6 @@ package com.project.cafeemployeemanagement.model;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.project.cafeemployeemanagement.util.CustomTimeDeserialize;
 import com.project.cafeemployeemanagement.util.utils;
-import org.hibernate.annotations.NaturalId;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -26,14 +25,8 @@ public class LeaveRequest {
     private Long numberOfOffDates;
 
     @Enumerated(EnumType.STRING)
-    @NaturalId
     @Column(length=60)
     private LeaveStatus status;
-
-    @Enumerated(EnumType.STRING)
-    @NaturalId
-    @Column(length=60)
-    private LeaveType leaveType;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="employee_id")
@@ -79,17 +72,7 @@ public class LeaveRequest {
         return status;
     }
 
-    public void setStatus(LeaveStatus leaveStatus) {
-        this.status = leaveStatus;
-    }
-
-    public LeaveType getLeaveType() {
-        return leaveType;
-    }
-
-    public void setLeaveType(LeaveType leaveType) {
-        this.leaveType = leaveType;
-    }
+    public void setStatus(LeaveStatus leaveStatus) { this.status = leaveStatus; }
 
     public Employee getEmployee() {
         return employee;

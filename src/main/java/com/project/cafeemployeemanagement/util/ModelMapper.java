@@ -46,8 +46,8 @@ public class ModelMapper {
         List<LeaveRequestsResponse> leaveRequestsResponses = leaveRequests.stream().map(leaveRequest -> {
             LeaveRequestsResponse leaveRequestsResponse = new LeaveRequestsResponse();
             leaveRequestsResponse.setId(leaveRequest.getId());
-            leaveRequestsResponse.setFromDate(leaveRequest.getFromDate());
-            leaveRequestsResponse.setToDate(leaveRequest.getToDate());
+            leaveRequestsResponse.setFromDate(utils.formatDate(leaveRequest.getFromDate()));
+            leaveRequestsResponse.setToDate(utils.formatDate(leaveRequest.getToDate()));
             leaveRequestsResponse.setNote(leaveRequest.getNote());
             leaveRequestsResponse.setEmployeeId(leaveRequest.getEmployee().getId());
             leaveRequestsResponse.setEmployeeFirstName(leaveRequest.getEmployee().getFirstName());

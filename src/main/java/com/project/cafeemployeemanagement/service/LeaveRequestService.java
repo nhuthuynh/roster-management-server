@@ -6,16 +6,18 @@ import com.project.cafeemployeemanagement.model.Employee;
 import com.project.cafeemployeemanagement.model.EmployeeShift;
 import com.project.cafeemployeemanagement.model.LeaveRequest;
 import com.project.cafeemployeemanagement.model.LeaveStatus;
-import com.project.cafeemployeemanagement.payload.EmployeeLeaveInfoResponse;
-import com.project.cafeemployeemanagement.payload.SubmitLeaveRequest;
-import com.project.cafeemployeemanagement.payload.UpdateLeaveRequest;
+import com.project.cafeemployeemanagement.payload.*;
 import com.project.cafeemployeemanagement.repository.EmployeeShiftRepository;
 import com.project.cafeemployeemanagement.repository.LeaveRequestRepository;
+import com.project.cafeemployeemanagement.util.ModelMapper;
+import com.project.cafeemployeemanagement.util.utils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class LeaveRequestService {
@@ -32,19 +34,38 @@ public class LeaveRequestService {
     @Autowired
     UtilsService utilsService;
 
+    @Transactional
     public EmployeeLeaveInfoResponse loadLeaveRequestsOfEmployee(final long employeeId) {
         List<LeaveRequest> leaveRequests = leaveRequestRepository.findByEmployee(employeeId);
         EmployeeLeaveInfoResponse employeeLeaveInfoResponse = new EmployeeLeaveInfoResponse();
 
-        int pendingLeaves = leaveRequests.stream()
+        int pendingLeaves = getNumberOfPendingLeaves(leaveRequests);
+        List<EmployeeLeaveRequest> employeeLeaveRequests = getPendingLeaves(leaveRequests);
+        employeeLeaveInfoResponse.setPendingLeave(pendingLeaves);
+        employeeLeaveInfoResponse.setLeaveBalance(getAnnualLeaveBalanceOfEmployee(employeeId));
+        employeeLeaveInfoResponse.setLeaveRequests(employeeLeaveRequests);
+
+        return employeeLeaveInfoResponse;
+    }
+
+    private int getNumberOfPendingLeaves(List<LeaveRequest> leaveRequests) {
+        return leaveRequests.stream()
                 .filter( leaveRequest -> leaveRequest.getStatus() == LeaveStatus.LEAVE_PENDING)
                 .mapToInt( leaveRequest -> (int) leaveRequest.getNumberOfOffDates())
                 .sum();
+    }
 
-        employeeLeaveInfoResponse.setPendingLeave(pendingLeaves);
-        employeeLeaveInfoResponse.setLeaveBalance(getAnnualLeaveBalanceOfEmployee(employeeId));
-
-        return employeeLeaveInfoResponse;
+    private List<EmployeeLeaveRequest> getPendingLeaves(List<LeaveRequest> leaveRequests) {
+        return leaveRequests.stream()
+                .map( leaveRequest -> {
+                    EmployeeLeaveRequest employeeLeaveRequest = new EmployeeLeaveRequest();
+                    employeeLeaveRequest.setId(leaveRequest.getId());
+                    employeeLeaveRequest.setFromDate(utils.formatDate(leaveRequest.getFromDate()));
+                    employeeLeaveRequest.setToDate(utils.formatDate(leaveRequest.getToDate()));
+                    employeeLeaveRequest.setNumberOfOffDates(leaveRequest.getNumberOfOffDates());
+                    employeeLeaveRequest.setStatus(leaveRequest.getStatus().name());
+                    return employeeLeaveRequest;
+                }).collect(Collectors.toList());
     }
 
     public int getAnnualLeaveBalanceOfEmployee(final long employeeId) {
@@ -79,7 +100,6 @@ public class LeaveRequestService {
         leaveRequest.setToDate(submitLeaveRequest.getToDate());
         leaveRequest.setNote(submitLeaveRequest.getNote());
         leaveRequest.setStatus(LeaveStatus.LEAVE_PENDING);
-        leaveRequest.setLeaveType(utilsService.getLeaveType(submitLeaveRequest.getLeaveType()));
 
         if (leaveRequestRepository.save(leaveRequest) == null) {
             throw new AppException("Failed to submit leave request!");
@@ -105,5 +125,11 @@ public class LeaveRequestService {
 
     public void denyLeaveRequest(final UpdateLeaveRequest updateLeaveRequest) {
         updateLeaveRequest(updateLeaveRequest, LeaveStatus.LEAVE_DENIED);
+    }
+
+    @Transactional
+    public List<LeaveRequestsResponse> loadEmployeesLeaveRequests(final long shopOwnerId) {
+        List<LeaveRequest> leaveRequests = leaveRequestRepository.findByShopOwnerIdAndStatus(shopOwnerId, LeaveStatus.LEAVE_PENDING);
+        return ModelMapper.mapLeaveRequestsToLeaveRequestsResponse(leaveRequests);
     }
 }
