@@ -34,7 +34,7 @@ public class LeaveRequestController {
     }
 
     @GetMapping("/employees/{employeeId}")
-    public ResponseEntity<?> loadLeaveRequestsOfEmployee(@PathVariable final long employeeId) {tu
+    public ResponseEntity<?> loadLeaveRequestsOfEmployee(@PathVariable final long employeeId) {
         return ResponseEntity.ok(leaveRequestService.loadLeaveRequestsOfEmployee(employeeId));
     }
 
