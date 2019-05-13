@@ -11,6 +11,7 @@ import com.project.cafeemployeemanagement.repository.EmployeeTypeRepository;
 import com.project.cafeemployeemanagement.repository.PasswordResetTokenRepository;
 import com.project.cafeemployeemanagement.repository.RoleRepository;
 import com.project.cafeemployeemanagement.security.UserPrincipal;
+import com.project.cafeemployeemanagement.util.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -20,6 +21,7 @@ import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -49,6 +51,7 @@ public class EmployeeService implements UserDetailsService {
     @Autowired
     private MailService mailService;
 
+
     @Override
     @Transactional
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
@@ -65,6 +68,15 @@ public class EmployeeService implements UserDetailsService {
 
     public Employee loadById(Long employeeId) {
         return employeeRepository.findById(employeeId).orElseThrow(() -> new AppException("Employee is not found"));
+    }
+
+    public List<EmployeeResponse> findByShopOwnerId(final Long shopOwnerId) {
+        return ModelMapper.mapEmployeesToResponse(employeeRepository.findByShopOwnerId(shopOwnerId));
+
+    }
+
+    public List<EmployeeResponse> findByShopOwnerIdAndResignedIs(final Long shopOwnerId, final boolean isResigned) {
+        return ModelMapper.mapEmployeesToResponse(employeeRepository.findByShopOwnerIdAndIsResigned(shopOwnerId, isResigned));
     }
 
     @Transactional
