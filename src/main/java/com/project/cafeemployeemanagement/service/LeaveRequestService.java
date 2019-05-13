@@ -2,10 +2,7 @@ package com.project.cafeemployeemanagement.service;
 
 import com.project.cafeemployeemanagement.constant.Constants;
 import com.project.cafeemployeemanagement.exception.AppException;
-import com.project.cafeemployeemanagement.model.Employee;
-import com.project.cafeemployeemanagement.model.EmployeeShift;
-import com.project.cafeemployeemanagement.model.LeaveRequest;
-import com.project.cafeemployeemanagement.model.LeaveStatus;
+import com.project.cafeemployeemanagement.model.*;
 import com.project.cafeemployeemanagement.payload.*;
 import com.project.cafeemployeemanagement.repository.EmployeeShiftRepository;
 import com.project.cafeemployeemanagement.repository.LeaveRequestRepository;
@@ -91,6 +88,10 @@ public class LeaveRequestService {
     }
 
     public void submitLeaveRequest(final SubmitLeaveRequest submitLeaveRequest) {
+        if (isDuplicateLeaveDate(submitLeaveRequest.getFromDate())) {
+            throw new AppException("Cannot submit 2 leave request at same date " + submitLeaveRequest.getFromDate() + "!");
+        }
+
         Employee employee = employeeService.loadById(submitLeaveRequest.getEmployeeId());
         LeaveRequest leaveRequest = new LeaveRequest();
         leaveRequest.setEmployee(employee);
@@ -103,6 +104,10 @@ public class LeaveRequestService {
         if (leaveRequestRepository.save(leaveRequest) == null) {
             throw new AppException("Failed to submit leave request!");
         }
+    }
+
+    private boolean isDuplicateLeaveDate(final Date fromDate) {
+        return leaveRequestRepository.findByFromDate(fromDate) != null ? true : false;
     }
 
     private void updateLeaveRequest(final UpdateLeaveRequest updateLeaveRequest, final LeaveStatus leaveStatus) {
@@ -129,6 +134,11 @@ public class LeaveRequestService {
     @Transactional
     public List<LeaveRequestsResponse> loadEmployeesLeaveRequests(final long shopOwnerId) {
         List<LeaveRequest> leaveRequests = leaveRequestRepository.findByShopOwnerIdAndStatus(shopOwnerId, LeaveStatus.LEAVE_PENDING);
+        return ModelMapper.mapLeaveRequestsToLeaveRequestsResponse(leaveRequests);
+    }
+
+    public List<LeaveRequestsResponse> loadEmployeesLeaveRequestsForManager(final long shopOwnerId) {
+        List<LeaveRequest> leaveRequests = leaveRequestRepository.findByShopOwnerIdAndStatusAndIsEmployeeRole(shopOwnerId, RoleName.ROLE_EMPLOYEE, LeaveStatus.LEAVE_PENDING);
         return ModelMapper.mapLeaveRequestsToLeaveRequestsResponse(leaveRequests);
     }
 }
