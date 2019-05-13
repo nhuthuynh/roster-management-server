@@ -45,6 +45,10 @@ public class LeaveRequestService {
         return employeeLeaveInfoResponse;
     }
 
+    public List<LeaveRequestsResponse> findByEmployeeAndStatus(final long employeeId) {
+        return ModelMapper.mapLeaveRequestsToLeaveRequestsResponse(leaveRequestRepository.findByEmployeeAndStatusOrderByCreatedDateDesc(employeeId, LeaveStatus.LEAVE_APPROVED));
+    }
+
     private long getNumberOfPendingLeaves(List<LeaveRequest> leaveRequests) {
         return leaveRequests.stream()
                 .filter( leaveRequest -> leaveRequest.getStatus() == LeaveStatus.LEAVE_PENDING)
