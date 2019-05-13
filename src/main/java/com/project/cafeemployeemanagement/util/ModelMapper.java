@@ -1,13 +1,7 @@
 package com.project.cafeemployeemanagement.util;
 
-import com.project.cafeemployeemanagement.model.Availability;
-import com.project.cafeemployeemanagement.model.EmployeeShift;
-import com.project.cafeemployeemanagement.model.LeaveRequest;
-import com.project.cafeemployeemanagement.model.Roster;
-import com.project.cafeemployeemanagement.payload.AvailabilityResponse;
-import com.project.cafeemployeemanagement.payload.LeaveRequestsResponse;
-import com.project.cafeemployeemanagement.payload.RosterResponse;
-import com.project.cafeemployeemanagement.payload.ShiftResponse;
+import com.project.cafeemployeemanagement.model.*;
+import com.project.cafeemployeemanagement.payload.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -74,6 +68,22 @@ public class ModelMapper {
         });
 
         return availabilityResponseList;
+    }
+
+    public static List<EmployeeResponse> mapEmployeesToResponse(List<Employee> employees) {
+        return employees.stream()
+                .map(employee ->
+                        new EmployeeResponse(employee.getId(),
+                                employee.getFirstName(),
+                                employee.getLastName(),
+                                employee.getEmail(),
+                                employee.getJoinedDate(),
+                                employee.getEmployeeType().getType().name(),
+                                employee.getRole().getName().name(),
+                                employee.getShopOwnerId(),
+                                employee.getPhoneNumber(),
+                                employee.isResigned())
+                ).collect(Collectors.toList());
     }
 
 }

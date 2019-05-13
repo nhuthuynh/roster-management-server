@@ -20,6 +20,8 @@ public interface EmployeeRepository extends JpaRepository<Employee, Long> {
 
     List<Employee> findByShopOwnerId(Long shopOwnerId);
 
+    List<Employee> findByShopOwnerIdAndIsResigned(Long shopOwnerId, boolean isResigned);
+
     @Modifying
     @Query("UPDATE Employee AS e SET e.isResigned = true WHERE e.id in :employeeList")
     int resignEmployees(@Param("employeeList") List<Long> employeeList);
