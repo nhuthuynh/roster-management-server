@@ -71,12 +71,12 @@ public class EmployeeService implements UserDetailsService {
     }
 
     public List<EmployeeResponse> findByShopOwnerId(final Long shopOwnerId) {
-        return ModelMapper.mapEmployeesToResponse(employeeRepository.findByShopOwnerId(shopOwnerId));
+        return ModelMapper.mapEmployeesToResponse(employeeRepository.findByShopOwnerIdOrderByJoinedDateDesc(shopOwnerId));
 
     }
 
     public List<EmployeeResponse> findByShopOwnerIdAndResignedIs(final Long shopOwnerId, final boolean isResigned) {
-        return ModelMapper.mapEmployeesToResponse(employeeRepository.findByShopOwnerIdAndIsResigned(shopOwnerId, isResigned));
+        return ModelMapper.mapEmployeesToResponse(employeeRepository.findByShopOwnerIdAndIsResignedOrderByJoinedDateDesc(shopOwnerId, isResigned));
     }
 
     @Transactional

@@ -44,4 +44,10 @@ public class LeaveRequestController {
         List<LeaveRequestsResponse> leaveRequestsResponseList = leaveRequestService.loadEmployeesLeaveRequests((shopOwnerId));
         return ResponseEntity.ok(leaveRequestsResponseList);
     }
+
+    @GetMapping("/shopOwner/{shopOwnerId}/manager/employees")
+    public ResponseEntity<?> loadEmployeesLeaveRequestsForManager(@PathVariable final long shopOwnerId) {
+        List<LeaveRequestsResponse> leaveRequestsResponseList = leaveRequestService.loadEmployeesLeaveRequestsForManager((shopOwnerId));
+        return ResponseEntity.ok(leaveRequestsResponseList);
+    }
 }

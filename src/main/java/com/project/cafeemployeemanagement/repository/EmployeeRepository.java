@@ -18,9 +18,9 @@ public interface EmployeeRepository extends JpaRepository<Employee, Long> {
 
     Boolean existsByEmail(String email);
 
-    List<Employee> findByShopOwnerId(Long shopOwnerId);
+    List<Employee> findByShopOwnerIdOrderByJoinedDateDesc(Long shopOwnerId);
 
-    List<Employee> findByShopOwnerIdAndIsResigned(Long shopOwnerId, boolean isResigned);
+    List<Employee> findByShopOwnerIdAndIsResignedOrderByJoinedDateDesc(Long shopOwnerId, boolean isResigned);
 
     @Modifying
     @Query("UPDATE Employee AS e SET e.isResigned = true WHERE e.id in :employeeList")

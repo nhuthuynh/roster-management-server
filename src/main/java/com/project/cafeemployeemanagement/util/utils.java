@@ -40,8 +40,8 @@ public class utils {
         long diffDates;
         long diffInMillies = Math.abs(toDate.getTime() - fromDate.getTime());
         diffDates = TimeUnit.DAYS.convert(diffInMillies, TimeUnit.MILLISECONDS);
-        // if the difference is 0, it means that employee take a day leave
-        return diffDates == 0 ? 1 : diffDates;
+        diffDates++;
+        return diffDates;
     }
 
     public static long getNumberOfDifferentHoursBetweenTwoWorkingHours(final Date startTime, final Date endTime) {

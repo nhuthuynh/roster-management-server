@@ -2,10 +2,7 @@ package com.project.cafeemployeemanagement.service;
 
 import com.project.cafeemployeemanagement.constant.Constants;
 import com.project.cafeemployeemanagement.exception.AppException;
-import com.project.cafeemployeemanagement.model.Employee;
-import com.project.cafeemployeemanagement.model.EmployeeShift;
-import com.project.cafeemployeemanagement.model.LeaveRequest;
-import com.project.cafeemployeemanagement.model.LeaveStatus;
+import com.project.cafeemployeemanagement.model.*;
 import com.project.cafeemployeemanagement.payload.*;
 import com.project.cafeemployeemanagement.repository.EmployeeShiftRepository;
 import com.project.cafeemployeemanagement.repository.LeaveRequestRepository;
@@ -39,7 +36,7 @@ public class LeaveRequestService {
         List<LeaveRequest> leaveRequests = leaveRequestRepository.findByEmployee(employeeId);
         EmployeeLeaveInfoResponse employeeLeaveInfoResponse = new EmployeeLeaveInfoResponse();
 
-        int pendingLeaves = getNumberOfPendingLeaves(leaveRequests);
+        int pendingLeaves = Math.toIntExact(getNumberOfPendingLeaves(leaveRequests));
         List<EmployeeLeaveRequest> employeeLeaveRequests = getPendingLeaves(leaveRequests);
         employeeLeaveInfoResponse.setPendingLeave(pendingLeaves);
         employeeLeaveInfoResponse.setLeaveBalance(getAnnualLeaveBalanceOfEmployee(employeeId));
@@ -48,11 +45,10 @@ public class LeaveRequestService {
         return employeeLeaveInfoResponse;
     }
 
-    private int getNumberOfPendingLeaves(List<LeaveRequest> leaveRequests) {
+    private long getNumberOfPendingLeaves(List<LeaveRequest> leaveRequests) {
         return leaveRequests.stream()
                 .filter( leaveRequest -> leaveRequest.getStatus() == LeaveStatus.LEAVE_PENDING)
-                .mapToInt( leaveRequest -> (int) leaveRequest.getNumberOfOffDates())
-                .sum();
+                .count();
     }
 
     private List<EmployeeLeaveRequest> getPendingLeaves(List<LeaveRequest> leaveRequests) {
@@ -79,7 +75,7 @@ public class LeaveRequestService {
 
     private int getUsedLeaves(final long employeeId) {
         int usedLeaves;
-        List<LeaveRequest> leaveRequests = leaveRequestRepository.findByEmployeeAndStatus(employeeId, LeaveStatus.LEAVE_APPROVED);
+        List<LeaveRequest> leaveRequests = leaveRequestRepository.findByEmployeeAndStatusOrderByCreatedDateDesc(employeeId, LeaveStatus.LEAVE_APPROVED);
         usedLeaves = leaveRequests.stream().mapToInt(leaveRequest -> (int) leaveRequest.getNumberOfOffDates()).sum();
         return usedLeaves;
     }
@@ -92,6 +88,10 @@ public class LeaveRequestService {
     }
 
     public void submitLeaveRequest(final SubmitLeaveRequest submitLeaveRequest) {
+        if (isWithinSubmittedLeaveRequest(submitLeaveRequest.getEmployeeId(), submitLeaveRequest.getFromDate())) {
+            throw new AppException(String.format("You have submitted leave request from %s to %s!", utils.formatDate(submitLeaveRequest.getFromDate()), utils.formatDate(submitLeaveRequest.getToDate())));
+        }
+
         Employee employee = employeeService.loadById(submitLeaveRequest.getEmployeeId());
         LeaveRequest leaveRequest = new LeaveRequest();
         leaveRequest.setEmployee(employee);
@@ -104,6 +104,10 @@ public class LeaveRequestService {
         if (leaveRequestRepository.save(leaveRequest) == null) {
             throw new AppException("Failed to submit leave request!");
         }
+    }
+
+    private boolean isWithinSubmittedLeaveRequest(final long employeeId, final Date fromDate) {
+        return leaveRequestRepository.findByEmployeeAndWithInFromDateAndToDateAndIsNotStatus(employeeId, fromDate, LeaveStatus.LEAVE_DENIED).size() > 0 ? true : false;
     }
 
     private void updateLeaveRequest(final UpdateLeaveRequest updateLeaveRequest, final LeaveStatus leaveStatus) {
@@ -129,7 +133,12 @@ public class LeaveRequestService {
 
     @Transactional
     public List<LeaveRequestsResponse> loadEmployeesLeaveRequests(final long shopOwnerId) {
-        List<LeaveRequest> leaveRequests = leaveRequestRepository.findByShopOwnerIdAndStatus(shopOwnerId, LeaveStatus.LEAVE_PENDING);
+        List<LeaveRequest> leaveRequests = leaveRequestRepository.findByShopOwnerIdAndStatusOrderByCreatedDateDesc(shopOwnerId, LeaveStatus.LEAVE_PENDING);
+        return ModelMapper.mapLeaveRequestsToLeaveRequestsResponse(leaveRequests);
+    }
+
+    public List<LeaveRequestsResponse> loadEmployeesLeaveRequestsForManager(final long shopOwnerId) {
+        List<LeaveRequest> leaveRequests = leaveRequestRepository.findByShopOwnerIdAndStatusAndIsEmployeeRoleOrderByCreatedDateDesc(shopOwnerId, RoleName.ROLE_EMPLOYEE, LeaveStatus.LEAVE_PENDING);
         return ModelMapper.mapLeaveRequestsToLeaveRequestsResponse(leaveRequests);
     }
 }
