@@ -13,8 +13,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
-import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/employee")
@@ -33,23 +31,8 @@ public class EmployeeController {
     JwtTokenProvider jwtTokenProvider;
 
     @GetMapping("/load")
-    public @ResponseBody
-    List<EmployeeResponse> loadEmployees(@RequestParam Long shopOwnerId) {
-        return employeeRepository.findByShopOwnerId(shopOwnerId)
-                .stream()
-                .map(
-                        employee
-                                ->
-                                new EmployeeResponse(employee.getId(),
-                                        employee.getFirstName(),
-                                        employee.getLastName(),
-                                        employee.getEmail(),
-                                        employee.getJoinedDate(),
-                                        employee.getEmployeeType().getType().name(),
-                                        employee.getRole().getName().name(),
-                                        employee.getShopOwnerId(),
-                                        employee.getPhoneNumber(),
-                                        employee.isResigned())).collect(Collectors.toList());
+    public ResponseEntity<?> loadEmployees(@RequestParam Long shopOwnerId) {
+        return ResponseEntity.ok(employeeService.findByShopOwnerId(shopOwnerId));
     }
 
     @GetMapping("/me")
