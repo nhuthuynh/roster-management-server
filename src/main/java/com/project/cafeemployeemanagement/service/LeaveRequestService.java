@@ -75,7 +75,7 @@ public class LeaveRequestService {
 
     private int getUsedLeaves(final long employeeId) {
         int usedLeaves;
-        List<LeaveRequest> leaveRequests = leaveRequestRepository.findByEmployeeAndStatus(employeeId, LeaveStatus.LEAVE_APPROVED);
+        List<LeaveRequest> leaveRequests = leaveRequestRepository.findByEmployeeAndStatusOrderByCreatedDateDesc(employeeId, LeaveStatus.LEAVE_APPROVED);
         usedLeaves = leaveRequests.stream().mapToInt(leaveRequest -> (int) leaveRequest.getNumberOfOffDates()).sum();
         return usedLeaves;
     }
@@ -88,8 +88,8 @@ public class LeaveRequestService {
     }
 
     public void submitLeaveRequest(final SubmitLeaveRequest submitLeaveRequest) {
-        if (isDuplicateLeaveDate(submitLeaveRequest.getFromDate())) {
-            throw new AppException("Cannot submit 2 leave request at same date " + submitLeaveRequest.getFromDate() + "!");
+        if (isWithinSubmittedLeaveRequest(submitLeaveRequest.getEmployeeId(), submitLeaveRequest.getFromDate())) {
+            throw new AppException(String.format("You have submitted leave request from %s to %s!", utils.formatDate(submitLeaveRequest.getFromDate()), utils.formatDate(submitLeaveRequest.getToDate())));
         }
 
         Employee employee = employeeService.loadById(submitLeaveRequest.getEmployeeId());
@@ -106,8 +106,8 @@ public class LeaveRequestService {
         }
     }
 
-    private boolean isDuplicateLeaveDate(final Date fromDate) {
-        return leaveRequestRepository.findByFromDate(fromDate) != null ? true : false;
+    private boolean isWithinSubmittedLeaveRequest(final long employeeId, final Date fromDate) {
+        return leaveRequestRepository.findByEmployeeAndWithInFromDateAndToDateAndIsNotStatus(employeeId, fromDate, LeaveStatus.LEAVE_DENIED).size() > 0 ? true : false;
     }
 
     private void updateLeaveRequest(final UpdateLeaveRequest updateLeaveRequest, final LeaveStatus leaveStatus) {
@@ -133,12 +133,12 @@ public class LeaveRequestService {
 
     @Transactional
     public List<LeaveRequestsResponse> loadEmployeesLeaveRequests(final long shopOwnerId) {
-        List<LeaveRequest> leaveRequests = leaveRequestRepository.findByShopOwnerIdAndStatus(shopOwnerId, LeaveStatus.LEAVE_PENDING);
+        List<LeaveRequest> leaveRequests = leaveRequestRepository.findByShopOwnerIdAndStatusOrderByCreatedDateDesc(shopOwnerId, LeaveStatus.LEAVE_PENDING);
         return ModelMapper.mapLeaveRequestsToLeaveRequestsResponse(leaveRequests);
     }
 
     public List<LeaveRequestsResponse> loadEmployeesLeaveRequestsForManager(final long shopOwnerId) {
-        List<LeaveRequest> leaveRequests = leaveRequestRepository.findByShopOwnerIdAndStatusAndIsEmployeeRole(shopOwnerId, RoleName.ROLE_EMPLOYEE, LeaveStatus.LEAVE_PENDING);
+        List<LeaveRequest> leaveRequests = leaveRequestRepository.findByShopOwnerIdAndStatusAndIsEmployeeRoleOrderByCreatedDateDesc(shopOwnerId, RoleName.ROLE_EMPLOYEE, LeaveStatus.LEAVE_PENDING);
         return ModelMapper.mapLeaveRequestsToLeaveRequestsResponse(leaveRequests);
     }
 }
