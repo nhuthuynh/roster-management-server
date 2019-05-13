@@ -39,7 +39,7 @@ public class LeaveRequestService {
         List<LeaveRequest> leaveRequests = leaveRequestRepository.findByEmployee(employeeId);
         EmployeeLeaveInfoResponse employeeLeaveInfoResponse = new EmployeeLeaveInfoResponse();
 
-        int pendingLeaves = getNumberOfPendingLeaves(leaveRequests);
+        int pendingLeaves = Math.toIntExact(getNumberOfPendingLeaves(leaveRequests));
         List<EmployeeLeaveRequest> employeeLeaveRequests = getPendingLeaves(leaveRequests);
         employeeLeaveInfoResponse.setPendingLeave(pendingLeaves);
         employeeLeaveInfoResponse.setLeaveBalance(getAnnualLeaveBalanceOfEmployee(employeeId));
@@ -48,11 +48,10 @@ public class LeaveRequestService {
         return employeeLeaveInfoResponse;
     }
 
-    private int getNumberOfPendingLeaves(List<LeaveRequest> leaveRequests) {
+    private long getNumberOfPendingLeaves(List<LeaveRequest> leaveRequests) {
         return leaveRequests.stream()
                 .filter( leaveRequest -> leaveRequest.getStatus() == LeaveStatus.LEAVE_PENDING)
-                .mapToInt( leaveRequest -> (int) leaveRequest.getNumberOfOffDates())
-                .sum();
+                .count();
     }
 
     private List<EmployeeLeaveRequest> getPendingLeaves(List<LeaveRequest> leaveRequests) {
