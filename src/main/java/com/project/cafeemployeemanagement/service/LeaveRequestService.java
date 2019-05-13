@@ -107,7 +107,7 @@ public class LeaveRequestService {
     }
 
     private boolean isWithinSubmittedLeaveRequest(final long employeeId, final Date fromDate) {
-        return leaveRequestRepository.findByEmployeeAndWithInFromDateAndToDateAndIsNotStatus(employeeId, fromDate, LeaveStatus.LEAVE_DENIED).size() > 0 ? true : false;
+        return leaveRequestRepository.findByEmployeeAndWithInFromDateAndToDateAndIsNotStatus(employeeId, fromDate, LeaveStatus.LEAVE_DENIED).size() > 0;
     }
 
     private void updateLeaveRequest(final UpdateLeaveRequest updateLeaveRequest, final LeaveStatus leaveStatus) {
