@@ -35,19 +35,21 @@ public class LeaveRequestController {
 
     @GetMapping("/employees/{employeeId}")
     public ResponseEntity<?> loadLeaveRequestsOfEmployee(@PathVariable final long employeeId) {
-        EmployeeLeaveInfoResponse employeeLeaveInfoResponse =leaveRequestService.loadLeaveRequestsOfEmployee(employeeId);
-        return ResponseEntity.ok(employeeLeaveInfoResponse);
+        return ResponseEntity.ok(leaveRequestService.loadLeaveRequestsOfEmployee(employeeId));
     }
 
     @GetMapping("/shopOwner/{shopOwnerId}/employees")
     public ResponseEntity<?> loadEmployeeLeaveRequest(@PathVariable final long shopOwnerId) {
-        List<LeaveRequestsResponse> leaveRequestsResponseList = leaveRequestService.loadEmployeesLeaveRequests((shopOwnerId));
-        return ResponseEntity.ok(leaveRequestsResponseList);
+        return ResponseEntity.ok(leaveRequestService.loadEmployeesLeaveRequests((shopOwnerId)));
     }
 
     @GetMapping("/shopOwner/{shopOwnerId}/manager/employees")
     public ResponseEntity<?> loadEmployeesLeaveRequestsForManager(@PathVariable final long shopOwnerId) {
-        List<LeaveRequestsResponse> leaveRequestsResponseList = leaveRequestService.loadEmployeesLeaveRequestsForManager((shopOwnerId));
-        return ResponseEntity.ok(leaveRequestsResponseList);
+        return ResponseEntity.ok(leaveRequestService.loadEmployeesLeaveRequestsForManager((shopOwnerId)));
+    }
+
+    @GetMapping("/employees/{employeeId}/approval")
+    public ResponseEntity<?> loadEmployeeApprovalLeaveRequests(@PathVariable final long employeeId) {
+        return ResponseEntity.ok(leaveRequestService.findByEmployeeAndStatus(employeeId));
     }
 }

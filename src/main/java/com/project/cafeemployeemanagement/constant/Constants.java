@@ -7,7 +7,7 @@ public final class Constants { // final make this class non-extendable
 
     // SUCCESS MESSAGES
     public static String ERROR_USER_NOT_FOUND = "Email or password is not correct!";
-    public static String[] DEFAULT_AVAILABILITY_DAYS = new String[]{"Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"};
+    public static String[] DEFAULT_AVAILABILITY_DAYS = new String[]{"sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday"};
     public static int DEFAULT_START_HOUR = 0;
     public static int DEFAULT_START_MINUTE = 0;
     public static int DEFAULT_END_HOUR = 0;
