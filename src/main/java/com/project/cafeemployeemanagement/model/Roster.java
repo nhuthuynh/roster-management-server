@@ -42,6 +42,9 @@ public class Roster {
 
     private boolean isPublished;
 
+    @Version
+    private int version;
+
     public Roster() {}
 
     public Roster(Date fromDate, Date toDate) {
@@ -113,6 +116,14 @@ public class Roster {
 
     public void setEmployee(Employee employee) {
         this.employee = employee;
+    }
+
+    public int getVersion() {
+        return version;
+    }
+
+    public void setVersion(int version) {
+        this.version = version;
     }
 
     @Override
