@@ -1,5 +1,6 @@
 package com.project.cafeemployeemanagement.controller;
 
+import com.project.cafeemployeemanagement.constant.Constants;
 import com.project.cafeemployeemanagement.payload.ApiResponse;
 import com.project.cafeemployeemanagement.payload.RosterRequest;
 import com.project.cafeemployeemanagement.payload.RosterResponse;
@@ -37,7 +38,7 @@ public class RosterController {
     }
 
     @GetMapping("/load")
-    public ResponseEntity<?> loadRoster(@RequestParam("from") @DateTimeFormat(pattern = "dd-MM-yyyy") Date fromDate, @RequestParam("to") @DateTimeFormat(pattern = "dd-MM-yyyy") Date toDate, @RequestParam("shopOwnerId") Long shopOwnerId) {
+    public ResponseEntity<?> loadRoster(@RequestParam("from") @DateTimeFormat(pattern = Constants.DATE_FORMAT) Date fromDate, @RequestParam("to") @DateTimeFormat(pattern = Constants.DATE_FORMAT) Date toDate, @RequestParam("shopOwnerId") Long shopOwnerId) {
             RosterResponse roster = rosterService.loadRosterByDatesAndShopOwner(fromDate, toDate, shopOwnerId);
         return ResponseEntity.ok().body(roster);
     }

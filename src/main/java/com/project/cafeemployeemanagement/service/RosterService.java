@@ -47,7 +47,7 @@ public class RosterService {
         rosterRequest.getShiftList().forEach(shiftRequest -> {
             Shift newShift = new Shift(newRoster, shiftRequest.getDate(), shiftRequest.getNote());
             shiftRequest.getEmployeeShifts().forEach(employeeShiftRequest -> {
-                EmployeeShift employeeShift = new EmployeeShift(employeeShiftRequest.getStartTime(), employeeShiftRequest.getEndTime(), employeeShiftRequest.getNote());
+                EmployeeShift employeeShift = new EmployeeShift(employeeShiftRequest.getStart(), employeeShiftRequest.getEnd(), employeeShiftRequest.getNote());
                 Employee employee = employeeRepository.findById(employeeShiftRequest.getEmployeeId()).orElseThrow(() -> new AppException("Cannot find employee"));
                 newShift.addEmployeeShift(employeeShift, employee);
             });

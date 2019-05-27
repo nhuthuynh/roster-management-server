@@ -1,11 +1,20 @@
 package com.project.cafeemployeemanagement.payload;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.project.cafeemployeemanagement.constant.Constants;
+import com.project.cafeemployeemanagement.util.CustomDateTimeDeserialize;
+
+import java.util.Date;
+
 public class ShiftResponse {
     private Long id;
 
-    private String start;
+    @JsonDeserialize(using = CustomDateTimeDeserialize.class)
+    private Date start;
 
-    private String end;
+    @JsonDeserialize(using = CustomDateTimeDeserialize.class)
+    private Date end;
 
     private String title;
 
@@ -21,19 +30,19 @@ public class ShiftResponse {
         this.id = id;
     }
 
-    public String getStart() {
+    public Date getStart() {
         return start;
     }
 
-    public void setStart(String start) {
+    public void setStart(Date start) {
         this.start = start;
     }
 
-    public String getEnd() {
+    public Date getEnd() {
         return end;
     }
 
-    public void setEnd(String end) {
+    public void setEnd(Date end) {
         this.end = end;
     }
 

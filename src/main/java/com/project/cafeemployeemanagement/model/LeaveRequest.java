@@ -1,7 +1,6 @@
 package com.project.cafeemployeemanagement.model;
 
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.project.cafeemployeemanagement.util.CustomTimeDeserialize;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.project.cafeemployeemanagement.util.utils;
 
 import javax.persistence.*;
@@ -15,11 +14,11 @@ public class LeaveRequest {
     private Long id;
 
     @Temporal(TemporalType.TIMESTAMP)
-    @JsonDeserialize(using= CustomTimeDeserialize.class)
+    @JsonFormat(shape=JsonFormat.Shape.STRING, pattern="dd-MM-yyyy, timezone = UTC")
     private Date fromDate;
 
     @Temporal(TemporalType.TIMESTAMP)
-    @JsonDeserialize(using= CustomTimeDeserialize.class)
+    @JsonFormat(shape=JsonFormat.Shape.STRING, pattern="dd-MM-yyyy, timezone = UTC")
     private Date toDate;
 
     private Long numberOfOffDates;
@@ -37,11 +36,9 @@ public class LeaveRequest {
     private String note;
 
     @Temporal(TemporalType.TIMESTAMP)
-    @JsonDeserialize(using= CustomTimeDeserialize.class)
     private Date createdDate;
 
     @Temporal(TemporalType.TIMESTAMP)
-    @JsonDeserialize(using= CustomTimeDeserialize.class)
     private Date updatedDate;
 
     public Long getId() {

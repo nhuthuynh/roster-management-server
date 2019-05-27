@@ -1,6 +1,7 @@
 package com.project.cafeemployeemanagement.model;
 
 import javax.persistence.*;
+import java.util.Date;
 
 @Entity
 @Table(name="availability")
@@ -20,6 +21,9 @@ public class Availability {
     private int endMinute;
 
     private boolean isAvailable;
+
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date effectiveDate;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="employee_id")
@@ -55,6 +59,18 @@ public class Availability {
         this.endMinute = endMinute;
         this.employee = employee;
         this.isAvailable = isAvailable;
+    }
+
+    public Availability(Long id, String day, int startHour, int startMinute, int endHour, int endMinute, boolean isAvailable, Employee employee, Date effectiveDate) {
+        this.id = id;
+        this.day = day;
+        this.startHour = startHour;
+        this.startMinute = startMinute;
+        this.endHour = endHour;
+        this.endMinute = endMinute;
+        this.employee = employee;
+        this.isAvailable = isAvailable;
+        this.effectiveDate = effectiveDate;
     }
 
     public Long getId() {
@@ -115,5 +131,13 @@ public class Availability {
 
     public void setEmployee(Employee employee) {
         this.employee = employee;
+    }
+
+    public Date getEffectiveDate() {
+        return effectiveDate;
+    }
+
+    public void setEffectiveDate(Date effectiveDate) {
+        this.effectiveDate = effectiveDate;
     }
 }
