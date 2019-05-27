@@ -1,11 +1,22 @@
 package com.project.cafeemployeemanagement.payload;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.project.cafeemployeemanagement.constant.Constants;
+import com.project.cafeemployeemanagement.util.CustomDateDeserialize;
+
+import java.util.Date;
+
 public class LeaveRequestsResponse {
     private Long id;
 
-    private String fromDate;
+    @JsonDeserialize(using = CustomDateDeserialize.class)
+    @JsonFormat(pattern= Constants.DATE_FORMAT)
+    private Date fromDate;
 
-    private String toDate;
+    @JsonDeserialize(using = CustomDateDeserialize.class)
+    @JsonFormat(pattern= Constants.DATE_FORMAT)
+    private Date toDate;
 
     private Long employeeId;
 
@@ -25,19 +36,19 @@ public class LeaveRequestsResponse {
         this.id = id;
     }
 
-    public String getFromDate() {
+    public Date getFromDate() {
         return fromDate;
     }
 
-    public void setFromDate(String fromDate) {
+    public void setFromDate(Date fromDate) {
         this.fromDate = fromDate;
     }
 
-    public String getToDate() {
+    public Date getToDate() {
         return toDate;
     }
 
-    public void setToDate(String toDate) {
+    public void setToDate(Date toDate) {
         this.toDate = toDate;
     }
 
