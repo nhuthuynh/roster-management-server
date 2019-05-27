@@ -13,17 +13,16 @@ public class ModelMapper {
         RosterResponse response = new RosterResponse();
         List<ShiftResponse> shiftResponses = new ArrayList<>();
 
-        response.setFromDate(utils.formatDate(roster.getFromDate()));
-        response.setToDate(utils.formatDate(roster.getToDate()));
+        response.setFromDate(roster.getFromDate());
+        response.setToDate(roster.getToDate());
         response.setId(roster.getId());
 
         roster.getShiftList().forEach(shift -> {
-            String dateString = utils.formatDate(shift.getDate());
             for (EmployeeShift employeeShift : shift.getEmployeeShifts()) {
                 ShiftResponse shiftResponse = new ShiftResponse();
                 shiftResponse.setId(employeeShift.getId());
-                shiftResponse.setStart(String.format("%s %s", dateString, utils.formatTime(employeeShift.getStartTime())));
-                shiftResponse.setEnd(String.format("%s %s", dateString, utils.formatTime(employeeShift.getEndTime())));
+                shiftResponse.setStart(employeeShift.getStart());
+                shiftResponse.setEnd(employeeShift.getEnd());
                 shiftResponse.setShiftId(employeeShift.getShift().getId());
                 shiftResponse.setEmployeeId(employeeShift.getEmployee().getId());
                 shiftResponse.setTitle(String.format("%s %s", employeeShift.getEmployee().getFirstName(), employeeShift.getEmployee().getLastName()));
