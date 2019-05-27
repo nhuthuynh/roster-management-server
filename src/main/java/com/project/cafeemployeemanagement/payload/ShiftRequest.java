@@ -9,7 +9,7 @@ import java.util.List;
 
 public class ShiftRequest {
 
-    @JsonDeserialize(using= CustomDateDeserialize.class)
+    @JsonDeserialize(using = CustomDateDeserialize.class)
     private Date date;
 
     private List<EmployeeShiftRequest> employeeShifts = new ArrayList<>();

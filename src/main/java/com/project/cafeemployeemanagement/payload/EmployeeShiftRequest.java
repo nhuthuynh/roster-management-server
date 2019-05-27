@@ -1,40 +1,36 @@
 package com.project.cafeemployeemanagement.payload;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.project.cafeemployeemanagement.util.CustomTimeDeserialize;
+import com.project.cafeemployeemanagement.util.CustomDateTimeDeserialize;
 
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 import java.util.Date;
 
 public class EmployeeShiftRequest {
 
-    @Temporal(TemporalType.TIMESTAMP)
-    @JsonDeserialize(using= CustomTimeDeserialize.class)
-    private Date startTime;
+    @JsonDeserialize(using = CustomDateTimeDeserialize.class)
+    private Date start;
 
-    @Temporal(TemporalType.TIMESTAMP)
-    @JsonDeserialize(using= CustomTimeDeserialize.class)
-    private Date endTime;
+    @JsonDeserialize(using = CustomDateTimeDeserialize.class)
+    private Date end;
 
     private Long employeeId;
 
     private String note;
 
-    public Date getStartTime() {
-        return startTime;
+    public Date getStart() {
+        return start;
     }
 
-    public void setStartTime(Date startTime) {
-        this.startTime = startTime;
+    public void setStart(Date start) {
+        this.start = start;
     }
 
-    public Date getEndTime() {
-        return endTime;
+    public Date getEnd() {
+        return end;
     }
 
-    public void setEndTime(Date endTime) {
-        this.endTime = endTime;
+    public void setEnd(Date end) {
+        this.end = end;
     }
 
     public Long getEmployeeId() {

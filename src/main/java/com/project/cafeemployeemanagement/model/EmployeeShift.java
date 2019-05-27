@@ -1,7 +1,6 @@
 package com.project.cafeemployeemanagement.model;
 
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.project.cafeemployeemanagement.util.CustomTimeDeserialize;
+import com.project.cafeemployeemanagement.util.utils;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -9,7 +8,7 @@ import java.util.Objects;
 
 @Entity
 @Table(name = "employee_shift")
-public class    EmployeeShift {
+public class EmployeeShift {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -23,28 +22,28 @@ public class    EmployeeShift {
     private Shift shift;
 
     @Temporal(TemporalType.TIMESTAMP)
-    @JsonDeserialize(using= CustomTimeDeserialize.class)
-    private Date startTime;
+    private Date start;
 
     @Temporal(TemporalType.TIMESTAMP)
-    @JsonDeserialize(using= CustomTimeDeserialize.class)
-    private Date endTime;
+    private Date end;
+
+    private float workedHours;
 
     private String note;
 
     public EmployeeShift() {}
 
-    public EmployeeShift(Date startTime, Date endTime, String note) {
-        this.startTime = startTime;
-        this.endTime = endTime;
+    public EmployeeShift(Date start, Date end, String note) {
+        this.start = start;
+        this.end = end;
         this.note = note;
     }
 
-    public EmployeeShift(Employee employee, Shift shift, Date startTime, Date endTime, String note) {
+    public EmployeeShift(Employee employee, Shift shift, Date start, Date end, String note) {
         this.employee = employee;
         this.shift = shift;
-        this.startTime = startTime;
-        this.endTime = endTime;
+        this.start = start;
+        this.end = end;
         this.note = note;
     }
 
@@ -72,20 +71,20 @@ public class    EmployeeShift {
         this.shift = shift;
     }
 
-    public Date getStartTime() {
-        return startTime;
+    public Date getStart() {
+        return start;
     }
 
-    public void setStartTime(Date startTime) {
-        this.startTime = startTime;
+    public void setStart(Date start) {
+        this.start = start;
     }
 
-    public Date getEndTime() {
-        return endTime;
+    public Date getEnd() {
+        return end;
     }
 
-    public void setEndTime(Date endTime) {
-        this.endTime = endTime;
+    public void setEnd(Date end) {
+        this.end = end;
     }
 
     public String getNote() {
@@ -94,6 +93,14 @@ public class    EmployeeShift {
 
     public void setNote(String note) {
         this.note = note;
+    }
+
+    public float getWorkedHours() {
+        return utils.getNumberOfDifferentHoursBetweenTwoWorkingHours(this.start, this.end);
+    }
+
+    public void setWorkedHours(float workedHours) {
+        this.workedHours = workedHours;
     }
 
     @Override

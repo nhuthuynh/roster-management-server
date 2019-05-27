@@ -1,8 +1,11 @@
 package com.project.cafeemployeemanagement.config;
 
+import com.project.cafeemployeemanagement.security.JwtAuthenticationEntryPoint;
+import com.project.cafeemployeemanagement.security.JwtAuthenticationFilter;
+import com.project.cafeemployeemanagement.service.EmployeeService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.BeanIds;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -13,6 +16,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 @EnableWebSecurity
@@ -23,9 +27,22 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 )
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
+    @Autowired
+    EmployeeService employeeService;
+
+    @Autowired
+    private JwtAuthenticationEntryPoint unauthorizedHandler;
+
+    @Bean
+    public JwtAuthenticationFilter jwtAuthenticationFilter() {
+        return new JwtAuthenticationFilter();
+    }
+
     @Override
     public void configure(AuthenticationManagerBuilder authenticationManagerBuilder) throws Exception {
-
+        authenticationManagerBuilder
+                .userDetailsService(employeeService)
+                .passwordEncoder(passwordEncoder());
     }
 
     @Bean(BeanIds.AUTHENTICATION_MANAGER)
@@ -42,8 +59,18 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
+
+                .cors()
+                .and()
+                .csrf()
+                .disable()
+                .exceptionHandling()
+                .authenticationEntryPoint(unauthorizedHandler)
+                .and()
+                .sessionManagement()
+                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                .and()
                 .authorizeRequests()
-                .antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                 .antMatchers("/",
                         "/favicon.ico",
                         "/**/*.png",
@@ -54,26 +81,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                         "/**/*.css",
                         "/**/*.js")
                 .permitAll()
-                .antMatchers(HttpMethod.GET, "/**")
-                .permitAll()
-                .antMatchers(HttpMethod.POST, "/**")
+                .antMatchers("/api/auth/**", "/api/employee/resetPassword", "/api/employee/changePasswordWithToken")
                 .permitAll()
                 .anyRequest()
-                .authenticated()
-                .and().exceptionHandling()
-                //.authenticationEntryPoint(unauthorizedHandler)
-                .and()
-                .httpBasic()
-                .and()
-                .sessionManagement()
-                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                .and()
-                .cors()
-                .and()
-                .csrf()
-                .disable();
-        // Add our custom JWT security filter
-        //http.addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
+                .authenticated();
+
+
+        http.addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
 
     }
 

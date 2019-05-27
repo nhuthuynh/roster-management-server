@@ -1,5 +1,7 @@
 package com.project.cafeemployeemanagement.model;
 
+import org.hibernate.annotations.NaturalId;
+
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -11,7 +13,10 @@ public class EmployeeType {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String type;
+    @Enumerated(EnumType.STRING)
+    @NaturalId
+    @Column(length=60)
+    private EmployeeTypeValues type;
 
     private int hourlyWorkPermit;
 
@@ -33,15 +38,15 @@ public class EmployeeType {
     public EmployeeType() {}
 
     public EmployeeType(EmployeeTypeValues values) {
-        this.type = values.getTitle();
-        this.hourlyWorkPermit = values.getLimitedWorkHours();
+        this.type = values;
+        this.hourlyWorkPermit = values.equals(EmployeeTypeValues.PART_TIME_STUDENT) ? 20 : 0;
     }
 
-    public String getType() {
+    public EmployeeTypeValues getType() {
         return type;
     }
 
-    public void setType(String type) {
+    public void setType(EmployeeTypeValues type) {
         this.type = type;
     }
 

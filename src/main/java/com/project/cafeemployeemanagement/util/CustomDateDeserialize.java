@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonDeserializer;
+import com.project.cafeemployeemanagement.constant.Constants;
 
 import java.io.IOException;
 import java.text.ParseException;
@@ -13,7 +14,7 @@ import java.util.Date;
 public class CustomDateDeserialize extends JsonDeserializer<Date> {
     @Override
     public Date deserialize(JsonParser p, DeserializationContext ctxt)
-            throws IOException, JsonProcessingException {
+            throws IOException {
         SimpleDateFormat formatter = new SimpleDateFormat(Constants.DATE_FORMAT);
 
         try {

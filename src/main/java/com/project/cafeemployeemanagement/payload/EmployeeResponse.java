@@ -1,9 +1,6 @@
 package com.project.cafeemployeemanagement.payload;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.project.cafeemployeemanagement.model.EmployeeType;
-import com.project.cafeemployeemanagement.model.Role;
 import com.project.cafeemployeemanagement.util.CustomDateDeserialize;
 
 import java.util.Date;
@@ -18,16 +15,20 @@ public class EmployeeResponse {
 
     private String email;
 
-    @JsonDeserialize(using= CustomDateDeserialize.class)
+    private Long shopOwnerId;
+
+    @JsonDeserialize(using = CustomDateDeserialize.class)
     private Date joinedDate;
 
-    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
-    private EmployeeType type;
+    private String type;
 
-    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
-    private Role role;
+    private String role;
 
-    public EmployeeResponse(Long id, String firstName, String lastName, String email, Date joinedDate, EmployeeType type, Role role) {
+    private String phoneNumber;
+
+    private boolean isResigned;
+
+    public EmployeeResponse(Long id, String firstName, String lastName, String email, Date joinedDate, String type, String role, Long shopOwnerId, String phoneNumber, boolean isResigned) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -35,6 +36,9 @@ public class EmployeeResponse {
         this.joinedDate = joinedDate;
         this.type = type;
         this.role = role;
+        this.shopOwnerId = shopOwnerId;
+        this.phoneNumber = phoneNumber;
+        this.isResigned = isResigned;
     }
 
     public Long getId() {
@@ -77,19 +81,43 @@ public class EmployeeResponse {
         this.joinedDate = joinedDate;
     }
 
-    public EmployeeType getType() {
+    public String getType() {
         return type;
     }
 
-    public void setType(EmployeeType type) {
+    public void setType(String type) {
         this.type = type;
     }
 
-    public Role getRole() {
+    public String getRole() {
         return role;
     }
 
-    public void setRole(Role role) {
+    public void setRole(String role) {
         this.role = role;
+    }
+
+    public Long getShopOwnerId() {
+        return shopOwnerId;
+    }
+
+    public void setShopOwnerId(Long shopOwnerId) {
+        this.shopOwnerId = shopOwnerId;
+    }
+
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
+
+    public boolean isResigned() {
+        return isResigned;
+    }
+
+    public void setResigned(boolean resigned) {
+        isResigned = resigned;
     }
 }

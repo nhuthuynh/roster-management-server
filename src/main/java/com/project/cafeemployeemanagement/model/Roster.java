@@ -1,7 +1,13 @@
 package com.project.cafeemployeemanagement.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.project.cafeemployeemanagement.util.CustomDateDeserialize;
+
 import javax.persistence.*;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 @Entity
 @Table(name = "roster")
@@ -11,18 +17,25 @@ public class Roster {
     private Long id;
 
     @Temporal(TemporalType.TIMESTAMP)
+    @JsonFormat(shape=JsonFormat.Shape.STRING, pattern="dd-MM-yyyy, timezone = UTC")
     private Date fromDate;
 
     @Temporal(TemporalType.TIMESTAMP)
+    @JsonFormat(shape=JsonFormat.Shape.STRING, pattern="dd-MM-yyyy, timezone = UTC")
     private Date toDate;
 
     @Temporal(TemporalType.TIMESTAMP)
+    @JsonFormat(shape=JsonFormat.Shape.STRING, pattern="dd-MM-yyyy, timezone = UTC")
     private Date createdDate;
 
     @OneToMany(mappedBy = "roster",
             cascade = CascadeType.ALL,
             orphanRemoval = true)
     private List<Shift> shifts = new ArrayList<>();
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="employee_id")
+    private Employee employee;
 
     public void addShift(Shift shift) {
         shifts.add(shift);
@@ -35,6 +48,9 @@ public class Roster {
     }
 
     private boolean isPublished;
+
+    @Version
+    private int version;
 
     public Roster() {}
 
@@ -101,4 +117,30 @@ public class Roster {
         this.shifts = shiftList;
     }
 
+    public Employee getEmployee() {
+        return employee;
+    }
+
+    public void setEmployee(Employee employee) {
+        this.employee = employee;
+    }
+
+    public int getVersion() {
+        return version;
+    }
+
+    public void setVersion(int version) {
+        this.version = version;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Roster )) return false;
+        return id != null && id.equals(((Roster) o).getId());
+    }
+    @Override
+    public int hashCode() {
+        return 31;
+    }
 }

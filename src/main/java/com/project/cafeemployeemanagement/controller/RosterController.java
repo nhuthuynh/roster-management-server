@@ -1,14 +1,13 @@
 package com.project.cafeemployeemanagement.controller;
 
-import com.project.cafeemployeemanagement.model.Roster;
+import com.project.cafeemployeemanagement.constant.Constants;
 import com.project.cafeemployeemanagement.payload.ApiResponse;
 import com.project.cafeemployeemanagement.payload.RosterRequest;
 import com.project.cafeemployeemanagement.payload.RosterResponse;
 import com.project.cafeemployeemanagement.repository.EmployeeRepository;
 import com.project.cafeemployeemanagement.repository.RosterRepository;
+import com.project.cafeemployeemanagement.service.EmployeeService;
 import com.project.cafeemployeemanagement.service.RosterService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
@@ -25,27 +24,27 @@ public class RosterController {
     RosterRepository rosterRepository;
 
     @Autowired
-    EmployeeRepository employeeRepository;
+    EmployeeService employeeService;
 
     @Autowired
     RosterService rosterService;
 
-    private static final Logger logger = LoggerFactory.getLogger(RosterController.class);
-
     @PostMapping("/create")
     public ResponseEntity<?> createRoster(@Valid @RequestBody RosterRequest rosterRequest) {
+        rosterService.deleteRoster(rosterRequest.getId());
         if (rosterService.createRoster(rosterRequest))
-            return ResponseEntity.ok().body(new ApiResponse(true, "Roster created sucessfully!"));
-        return  ResponseEntity.badRequest().body(new ApiResponse(false, "create roster failed!"));
+            return ResponseEntity.ok().body(new ApiResponse(true, "Roster created successfully!"));
+        return ResponseEntity.badRequest().body(new ApiResponse(false, "create roster failed!"));
     }
 
     @GetMapping("/load")
-    public @ResponseBody
-    RosterResponse loadRoster(@RequestParam("from") @DateTimeFormat(pattern="dd-MM-yyyy") Date fromDate, @RequestParam("to") @DateTimeFormat(pattern="dd-MM-yyyy") Date toDate) {
-        Roster roster = rosterRepository.findByDates(fromDate, toDate);
-        if (roster == null) {
-            return new RosterResponse();
-        }
-        return rosterService.loadRoster(roster);
+    public ResponseEntity<?> loadRoster(@RequestParam("from") @DateTimeFormat(pattern = Constants.DATE_FORMAT) Date fromDate, @RequestParam("to") @DateTimeFormat(pattern = Constants.DATE_FORMAT) Date toDate, @RequestParam("shopOwnerId") Long shopOwnerId) {
+            RosterResponse roster = rosterService.loadRosterByDatesAndShopOwner(fromDate, toDate, shopOwnerId);
+        return ResponseEntity.ok().body(roster);
+    }
+
+    @GetMapping("/shopOwner/{shopOwnerId}/employees")
+    public ResponseEntity<?> loadEmployees(@PathVariable final long shopOwnerId) {
+        return ResponseEntity.ok(employeeService.findByShopOwnerIdAndResignedIs(shopOwnerId, false));
     }
 }
