@@ -41,6 +41,12 @@ public class MailService {
     @Value("${app.mail.debug}")
     private boolean mailDebug;
 
+    @Value("${app.mail.sign-in-information-text}")
+    private String mailSignInInformationText;
+
+    @Value("${app.mail.reset-password-text}")
+    private String mailResetPasswordText;
+
     @Bean
     public JavaMailSender getJavaMailSender() {
         JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
@@ -71,11 +77,11 @@ public class MailService {
     public SimpleMailMessage constructResetPasswordEmail(String contextPath, String token, Employee employee) {
         final String url = contextPath + "/resetPassword?employeeId=" + employee.getId() + "&token=" + token;
         final String message = "Hi," + employee.getFirstName() + "\r\n" + "Forgot your password? Just reset your password by clicking the following link.";
-        return constructEmail("Reset Password", message + " \r\n" + url, employee);
+        return constructEmail(mailResetPasswordText, message + " \r\n" + url, employee);
     }
 
     public SimpleMailMessage constructSignInInfoEmail(String contextPath, Employee employee, String password) {
         final String message = "Welcome, " + employee.getFirstName() + " " + employee.getLastName() + " to CEMS!" + "\r\n" + "Here is your password: " + password + "\r\n" + "You can sign in at: " + contextPath;
-        return constructEmail("Sign In Information", message, employee);
+        return constructEmail(mailSignInInformationText, message, employee);
     }
 }
