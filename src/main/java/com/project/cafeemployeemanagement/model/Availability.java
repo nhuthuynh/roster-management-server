@@ -1,5 +1,7 @@
 package com.project.cafeemployeemanagement.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import javax.persistence.*;
 import java.util.Date;
 
@@ -23,6 +25,7 @@ public class Availability {
     private boolean isAvailable;
 
     @Temporal(TemporalType.TIMESTAMP)
+    @JsonFormat(shape=JsonFormat.Shape.STRING, pattern="dd-MM-yyyy, timezone = UTC")
     private Date effectiveDate;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -31,34 +34,14 @@ public class Availability {
 
     public Availability() {}
 
-    public Availability(Long id, String day, int startHour, int startMinute, int endHour, int endMinute, boolean isAvailable) {
-        this.id = id;
+    public Availability(String day, int startHour, int startMinute, int endHour, int endMinute, boolean isAvailable, Date effectiveDate) {
         this.day = day;
         this.startHour = startHour;
         this.startMinute = startMinute;
         this.endHour = endHour;
         this.endMinute = endMinute;
         this.isAvailable = isAvailable;
-    }
-
-    public Availability(String day, int startHour, int startMinute, int endHour, int endMinute, boolean isAvailable) {
-        this.day = day;
-        this.startHour = startHour;
-        this.startMinute = startMinute;
-        this.endHour = endHour;
-        this.endMinute = endMinute;
-        this.isAvailable = isAvailable;
-    }
-
-    public Availability(Long id, String day, int startHour, int startMinute, int endHour, int endMinute, boolean isAvailable, Employee employee) {
-        this.id = id;
-        this.day = day;
-        this.startHour = startHour;
-        this.startMinute = startMinute;
-        this.endHour = endHour;
-        this.endMinute = endMinute;
-        this.employee = employee;
-        this.isAvailable = isAvailable;
+        this.effectiveDate = effectiveDate;
     }
 
     public Availability(Long id, String day, int startHour, int startMinute, int endHour, int endMinute, boolean isAvailable, Employee employee, Date effectiveDate) {

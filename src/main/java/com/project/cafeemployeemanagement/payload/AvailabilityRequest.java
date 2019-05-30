@@ -4,8 +4,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class AvailabilityRequest {
+
     private List<AvailabilityResponse> availabilityList = new ArrayList<>();
     private Long employeeId;
+    private Long shopOwnerId;
 
     public List<AvailabilityResponse> getAvailabilityList() {
         return availabilityList;
@@ -21,5 +23,13 @@ public class AvailabilityRequest {
 
     public void setEmployeeId(Long employeeId) {
         this.employeeId = employeeId;
+    }
+
+    public Long getShopOwnerId() {
+        return shopOwnerId;
+    }
+
+    public void setShopOwnerId(Long shopOwnerId) {
+        this.shopOwnerId = shopOwnerId;
     }
 }

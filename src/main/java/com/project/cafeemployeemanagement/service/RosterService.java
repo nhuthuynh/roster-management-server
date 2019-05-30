@@ -71,10 +71,16 @@ public class RosterService {
     }
 
     public RosterResponse loadRosterByDatesAndShopOwner(final Date fromDate, final Date toDate, final Long shopOwnerId) {
-        Roster roster = rosterRepository.findByDates(fromDate, toDate, shopOwnerId);
+        Roster roster = rosterRepository.findByDatesAndShopOwnerId(fromDate, toDate, shopOwnerId);
         if (roster == null) {
             return new RosterResponse();
         }
         return loadRoster(roster);
+    }
+
+    public Roster findLatestRosterByToDateAndShopOwner(final Long shopOwnerId) {
+        List<Roster> rosters = rosterRepository.findByToDateAfterAndAndEmployee(new Date(), shopOwnerId);
+
+        return rosters.stream().reduce((first, second) -> second).orElse(null);
     }
 }

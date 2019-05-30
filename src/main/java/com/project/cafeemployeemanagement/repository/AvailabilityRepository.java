@@ -11,9 +11,10 @@ import java.util.List;
 
 public interface AvailabilityRepository extends JpaRepository<Availability, Long> {
 
-    @Query("SELECT a FROM Availability AS a WHERE a.employee.id = :employeeId")
-    List<Availability> findAllByEmployeeId(@Param("employeeId") Long employeeId);
+    @Query("SELECT a FROM Availability AS a WHERE :date > a.effectiveDate AND :employeeId = a.employee.id")
+    List<Availability> findByEffectiveDateAfterAndEmployeeId(@Param("date") Date date, @Param("employeeId") Long employeeId);
 
-    @Query("SELECT a from Availability AS a WHERE a.employee.id = :employeeId AND :currentDate > a.effectiveDate")
-    List<Availability> findAllByEmployeeIdAndEffectiveDate(@Param("employeeId") Long employeeId, @Param("currentDate") Date currentDate);
+    @Query("SELECT a FROM Availability AS a WHERE :employeeId = a.employee.id")
+    List<Availability> findByEmployeeId(@Param("employeeId") Long employeeId);
+
 }
