@@ -4,7 +4,6 @@ import com.project.cafeemployeemanagement.constant.Constants;
 import com.project.cafeemployeemanagement.payload.ApiResponse;
 import com.project.cafeemployeemanagement.payload.RosterRequest;
 import com.project.cafeemployeemanagement.payload.RosterResponse;
-import com.project.cafeemployeemanagement.repository.EmployeeRepository;
 import com.project.cafeemployeemanagement.repository.RosterRepository;
 import com.project.cafeemployeemanagement.service.EmployeeService;
 import com.project.cafeemployeemanagement.service.RosterService;
@@ -15,8 +14,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.time.LocalDate;
-import java.util.Date;
 
 @RestController
 @RequestMapping("/api/roster")
