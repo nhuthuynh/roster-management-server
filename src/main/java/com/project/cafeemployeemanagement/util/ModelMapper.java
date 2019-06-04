@@ -63,7 +63,7 @@ public class ModelMapper {
                                                                                 availability.getEndHour(),
                                                                                 availability.getEndMinute(),
                                                                                 availability.isAvailable(),
-                                                                                availability.getEffectiveDate()
+                                                                                availability.getEffectiveDate().format(utils.getDateTimeFormatter())
                                                                             )));
 
         return availabilityResponseList;
