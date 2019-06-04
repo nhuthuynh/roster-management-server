@@ -4,21 +4,22 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.project.cafeemployeemanagement.constant.Constants;
 import com.project.cafeemployeemanagement.util.CustomDateDeserialize;
+import com.project.cafeemployeemanagement.util.LocalDateDeserialize;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 public class RosterResponse {
     private Long id;
 
-    @JsonDeserialize(using = CustomDateDeserialize.class)
+    @JsonDeserialize(using = LocalDateDeserialize.class)
     @JsonFormat(pattern= Constants.DATE_FORMAT)
-    private Date fromDate;
+    private LocalDate fromDate;
 
-    @JsonDeserialize(using = CustomDateDeserialize.class)
+    @JsonDeserialize(using = LocalDateDeserialize.class)
     @JsonFormat(pattern= Constants.DATE_FORMAT)
-    private Date toDate;
+    private LocalDate toDate;
 
     private List<ShiftResponse> shiftList = new ArrayList<>();
 
@@ -30,19 +31,19 @@ public class RosterResponse {
         this.id = id;
     }
 
-    public Date getFromDate() {
+    public LocalDate getFromDate() {
         return fromDate;
     }
 
-    public void setFromDate(Date fromDate) {
+    public void setFromDate(LocalDate fromDate) {
         this.fromDate = fromDate;
     }
 
-    public Date getToDate() {
+    public LocalDate getToDate() {
         return toDate;
     }
 
-    public void setToDate(Date toDate) {
+    public void setToDate(LocalDate toDate) {
         this.toDate = toDate;
     }
 

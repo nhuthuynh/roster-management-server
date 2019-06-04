@@ -1,11 +1,7 @@
 package com.project.cafeemployeemanagement.payload;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.project.cafeemployeemanagement.constant.Constants;
-import com.project.cafeemployeemanagement.util.CustomDateDeserialize;
-
-import java.util.Date;
 
 public class AvailabilityResponse {
 
@@ -23,13 +19,11 @@ public class AvailabilityResponse {
 
     private boolean isAvailable;
 
-    @JsonDeserialize(using = CustomDateDeserialize.class)
     @JsonFormat(pattern= Constants.DATE_FORMAT)
-    private Date effectiveDate;
+    private String effectiveDate;
 
-    private int version;
 
-    public AvailabilityResponse(Long id, String day, int startHour, int startMinute, int endHour, int endMinute, boolean isAvailable, Date effectiveDate) {
+    public AvailabilityResponse(Long id, String day, int startHour, int startMinute, int endHour, int endMinute, boolean isAvailable, String effectiveDate) {
         this.id = id;
         this.day = day;
         this.startHour = startHour;
@@ -92,19 +86,10 @@ public class AvailabilityResponse {
         isAvailable = available;
     }
 
-    public Date getEffectiveDate() {
-        return effectiveDate;
-    }
+    public String getEffectiveDate() { return effectiveDate; }
 
-    public void setEffectiveDate(Date effectiveDate) {
+    public void setEffectiveDate(String effectiveDate) {
         this.effectiveDate = effectiveDate;
     }
 
-    public int getVersion() {
-        return version;
-    }
-
-    public void setVersion(int version) {
-        this.version = version;
-    }
 }
