@@ -39,8 +39,8 @@ public class ModelMapper {
         List<LeaveRequestsResponse> leaveRequestsResponses = leaveRequests.stream().map(leaveRequest -> {
             LeaveRequestsResponse leaveRequestsResponse = new LeaveRequestsResponse();
             leaveRequestsResponse.setId(leaveRequest.getId());
-            leaveRequestsResponse.setFromDate(utils.formatDate(leaveRequest.getFromDate()));
-            leaveRequestsResponse.setToDate(utils.formatDate(leaveRequest.getToDate()));
+            leaveRequestsResponse.setFromDate(leaveRequest.getFromDate());
+            leaveRequestsResponse.setToDate(leaveRequest.getToDate());
             leaveRequestsResponse.setNote(leaveRequest.getNote());
             leaveRequestsResponse.setEmployeeId(leaveRequest.getEmployee().getId());
             leaveRequestsResponse.setEmployeeFirstName(leaveRequest.getEmployee().getFirstName());
@@ -55,16 +55,16 @@ public class ModelMapper {
     public static List<AvailabilityResponse> mapAvailabilitiesToResponse(List<Availability> availabilities) {
         List<AvailabilityResponse> availabilityResponseList = new ArrayList<>();
 
-        availabilities.forEach(availability -> {
-            availabilityResponseList.add(new AvailabilityResponse(
-                    availability.getId(),
-                    availability.getDay(),
-                    availability.getStartHour(),
-                    availability.getStartMinute(),
-                    availability.getEndHour(),
-                    availability.getEndMinute(),
-                    availability.isAvailable()));
-        });
+        availabilities.forEach(availability -> availabilityResponseList.add(new AvailabilityResponse(
+                                                                                availability.getId(),
+                                                                                availability.getDay(),
+                                                                                availability.getStartHour(),
+                                                                                availability.getStartMinute(),
+                                                                                availability.getEndHour(),
+                                                                                availability.getEndMinute(),
+                                                                                availability.isAvailable(),
+                                                                                availability.getEffectiveDate().format(utils.getDateTimeFormatter())
+                                                                            )));
 
         return availabilityResponseList;
     }

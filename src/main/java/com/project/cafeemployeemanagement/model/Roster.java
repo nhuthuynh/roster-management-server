@@ -1,12 +1,12 @@
 package com.project.cafeemployeemanagement.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.project.cafeemployeemanagement.util.CustomDateDeserialize;
+import com.project.cafeemployeemanagement.constant.Constants;
+import com.project.cafeemployeemanagement.util.utils;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 @Entity
@@ -16,17 +16,14 @@ public class Roster {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Temporal(TemporalType.TIMESTAMP)
-    @JsonFormat(shape=JsonFormat.Shape.STRING, pattern="dd-MM-yyyy, timezone = UTC")
-    private Date fromDate;
+    @JsonFormat(pattern= Constants.DATE_FORMAT)
+    private LocalDate fromDate;
 
-    @Temporal(TemporalType.TIMESTAMP)
-    @JsonFormat(shape=JsonFormat.Shape.STRING, pattern="dd-MM-yyyy, timezone = UTC")
-    private Date toDate;
+    @JsonFormat(pattern= Constants.DATE_FORMAT)
+    private LocalDate toDate;
 
-    @Temporal(TemporalType.TIMESTAMP)
-    @JsonFormat(shape=JsonFormat.Shape.STRING, pattern="dd-MM-yyyy, timezone = UTC")
-    private Date createdDate;
+    @JsonFormat(pattern= Constants.DATE_FORMAT)
+    private LocalDate createdDate;
 
     @OneToMany(mappedBy = "roster",
             cascade = CascadeType.ALL,
@@ -54,14 +51,14 @@ public class Roster {
 
     public Roster() {}
 
-    public Roster(Date fromDate, Date toDate) {
+    public Roster(LocalDate fromDate, LocalDate toDate) {
         this.fromDate = fromDate;
         this.toDate = toDate;
-        this.createdDate = new Date();
+        this.createdDate = utils.getToday();
         this.isPublished = false;
     }
 
-    public Roster(Date fromDate, Date toDate, Date createdDate, List<Shift> shifts) {
+    public Roster(LocalDate fromDate, LocalDate toDate, LocalDate createdDate, List<Shift> shifts) {
         this.fromDate = fromDate;
         this.toDate = toDate;
         this.createdDate = createdDate;
@@ -69,27 +66,27 @@ public class Roster {
         this.isPublished = false;
     }
 
-    public Date getFromDate() {
+    public LocalDate getFromDate() {
         return fromDate;
     }
 
-    public void setFromDate(Date fromDate) {
+    public void setFromDate(LocalDate fromDate) {
         this.fromDate = fromDate;
     }
 
-    public Date getToDate() {
+    public LocalDate getToDate() {
         return toDate;
     }
 
-    public void setToDate(Date toDate) {
+    public void setToDate(LocalDate toDate) {
         this.toDate = toDate;
     }
 
-    public Date getCreatedDate() {
+    public LocalDate getCreatedDate() {
         return createdDate;
     }
 
-    public void setCreatedDate(Date createdDate) {
+    public void setCreatedDate(LocalDate createdDate) {
         this.createdDate = createdDate;
     }
 

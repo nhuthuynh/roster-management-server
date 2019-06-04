@@ -1,5 +1,8 @@
 package com.project.cafeemployeemanagement.payload;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.project.cafeemployeemanagement.constant.Constants;
+
 public class AvailabilityResponse {
 
     private Long id;
@@ -16,7 +19,11 @@ public class AvailabilityResponse {
 
     private boolean isAvailable;
 
-    public AvailabilityResponse(Long id, String day, int startHour, int startMinute, int endHour, int endMinute, boolean isAvailable) {
+    @JsonFormat(pattern= Constants.DATE_FORMAT)
+    private String effectiveDate;
+
+
+    public AvailabilityResponse(Long id, String day, int startHour, int startMinute, int endHour, int endMinute, boolean isAvailable, String effectiveDate) {
         this.id = id;
         this.day = day;
         this.startHour = startHour;
@@ -24,6 +31,7 @@ public class AvailabilityResponse {
         this.endHour = endHour;
         this.endMinute = endMinute;
         this.isAvailable = isAvailable;
+        this.effectiveDate = effectiveDate;
     }
 
     public Long getId() {
@@ -77,4 +85,11 @@ public class AvailabilityResponse {
     public void setAvailable(boolean available) {
         isAvailable = available;
     }
+
+    public String getEffectiveDate() { return effectiveDate; }
+
+    public void setEffectiveDate(String effectiveDate) {
+        this.effectiveDate = effectiveDate;
+    }
+
 }

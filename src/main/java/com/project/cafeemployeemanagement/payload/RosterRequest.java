@@ -1,24 +1,28 @@
 package com.project.cafeemployeemanagement.payload;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.project.cafeemployeemanagement.constant.Constants;
 import com.project.cafeemployeemanagement.util.CustomDateDeserialize;
+import com.project.cafeemployeemanagement.util.LocalDateDeserialize;
+import org.apache.tomcat.jni.Local;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 public class RosterRequest {
 
     private Long id;
 
-    @JsonDeserialize(using = CustomDateDeserialize.class)
-    private Date fromDate;
+    @JsonFormat(pattern= Constants.DATE_FORMAT)
+    private String fromDate;
 
-    @JsonDeserialize(using = CustomDateDeserialize.class)
-    private Date toDate;
+    @JsonFormat(pattern= Constants.DATE_FORMAT)
+    private String toDate;
 
-    @JsonDeserialize(using = CustomDateDeserialize.class)
-    private Date createdDate;
+    @JsonFormat(pattern= Constants.DATE_FORMAT)
+    private String createdDate;
 
     private Long shopOwnerId;
 
@@ -32,27 +36,27 @@ public class RosterRequest {
         this.id = id;
     }
 
-    public Date getFromDate() {
+    public String getFromDate() {
         return fromDate;
     }
 
-    public void setFromDate(Date fromDate) {
+    public void setFromDate(String fromDate) {
         this.fromDate = fromDate;
     }
 
-    public Date getToDate() {
+    public String getToDate() {
         return toDate;
     }
 
-    public void setToDate(Date toDate) {
+    public void setToDate(String toDate) {
         this.toDate = toDate;
     }
 
-    public Date getCreatedDate() {
+    public String getCreatedDate() {
         return createdDate;
     }
 
-    public void setCreatedDate(Date createdDate) {
+    public void setCreatedDate(String createdDate) {
         this.createdDate = createdDate;
     }
 

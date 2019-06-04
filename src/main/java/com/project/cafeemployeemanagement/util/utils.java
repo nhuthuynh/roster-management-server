@@ -4,11 +4,31 @@ import com.project.cafeemployeemanagement.constant.Constants;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
 public class utils {
     private static SimpleDateFormat simpleDateFormat = new SimpleDateFormat();
+
+    private static DateTimeFormatter formatter = DateTimeFormatter.ofPattern(Constants.DATE_FORMAT);
+
+    public static LocalDate getToday() {
+        return LocalDate.now();
+    }
+
+    public static String getTodayString() {
+        return LocalDate.now().format(formatter);
+    }
+
+    public static LocalDate parseLocalDate(String dateStr) {
+        return LocalDate.parse(dateStr, formatter);
+    }
+
+    public static DateTimeFormatter getDateTimeFormatter() {
+        return formatter;
+    }
 
     public static String formatDate(Date date) {
         simpleDateFormat.applyPattern(Constants.DATE_FORMAT);

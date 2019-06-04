@@ -1,7 +1,10 @@
 package com.project.cafeemployeemanagement.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.project.cafeemployeemanagement.constant.Constants;
+
 import javax.persistence.*;
-import java.util.Date;
+import java.time.LocalDate;
 
 @Entity
 @Table(name="availability")
@@ -22,8 +25,8 @@ public class Availability {
 
     private boolean isAvailable;
 
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date effectiveDate;
+    @JsonFormat(pattern= Constants.DATE_FORMAT)
+    private LocalDate effectiveDate;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="employee_id")
@@ -31,37 +34,17 @@ public class Availability {
 
     public Availability() {}
 
-    public Availability(Long id, String day, int startHour, int startMinute, int endHour, int endMinute, boolean isAvailable) {
-        this.id = id;
+    public Availability(String day, int startHour, int startMinute, int endHour, int endMinute, boolean isAvailable, LocalDate effectiveDate) {
         this.day = day;
         this.startHour = startHour;
         this.startMinute = startMinute;
         this.endHour = endHour;
         this.endMinute = endMinute;
         this.isAvailable = isAvailable;
+        this.effectiveDate = effectiveDate;
     }
 
-    public Availability(String day, int startHour, int startMinute, int endHour, int endMinute, boolean isAvailable) {
-        this.day = day;
-        this.startHour = startHour;
-        this.startMinute = startMinute;
-        this.endHour = endHour;
-        this.endMinute = endMinute;
-        this.isAvailable = isAvailable;
-    }
-
-    public Availability(Long id, String day, int startHour, int startMinute, int endHour, int endMinute, boolean isAvailable, Employee employee) {
-        this.id = id;
-        this.day = day;
-        this.startHour = startHour;
-        this.startMinute = startMinute;
-        this.endHour = endHour;
-        this.endMinute = endMinute;
-        this.employee = employee;
-        this.isAvailable = isAvailable;
-    }
-
-    public Availability(Long id, String day, int startHour, int startMinute, int endHour, int endMinute, boolean isAvailable, Employee employee, Date effectiveDate) {
+    public Availability(Long id, String day, int startHour, int startMinute, int endHour, int endMinute, boolean isAvailable, Employee employee, LocalDate effectiveDate) {
         this.id = id;
         this.day = day;
         this.startHour = startHour;
@@ -133,11 +116,11 @@ public class Availability {
         this.employee = employee;
     }
 
-    public Date getEffectiveDate() {
+    public LocalDate getEffectiveDate() {
         return effectiveDate;
     }
 
-    public void setEffectiveDate(Date effectiveDate) {
+    public void setEffectiveDate(LocalDate effectiveDate) {
         this.effectiveDate = effectiveDate;
     }
 }

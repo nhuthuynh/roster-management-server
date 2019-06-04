@@ -1,9 +1,12 @@
 package com.project.cafeemployeemanagement.payload;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.project.cafeemployeemanagement.constant.Constants;
 import com.project.cafeemployeemanagement.util.CustomDateDeserialize;
+import com.project.cafeemployeemanagement.util.LocalDateDeserialize;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 public class EmployeeResponse {
 
@@ -17,8 +20,9 @@ public class EmployeeResponse {
 
     private Long shopOwnerId;
 
-    @JsonDeserialize(using = CustomDateDeserialize.class)
-    private Date joinedDate;
+    @JsonDeserialize(using = LocalDateDeserialize.class)
+    @JsonFormat(pattern= Constants.DATE_FORMAT)
+    private LocalDate joinedDate;
 
     private String type;
 
@@ -28,7 +32,7 @@ public class EmployeeResponse {
 
     private boolean isResigned;
 
-    public EmployeeResponse(Long id, String firstName, String lastName, String email, Date joinedDate, String type, String role, Long shopOwnerId, String phoneNumber, boolean isResigned) {
+    public EmployeeResponse(Long id, String firstName, String lastName, String email, LocalDate joinedDate, String type, String role, Long shopOwnerId, String phoneNumber, boolean isResigned) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -73,11 +77,11 @@ public class EmployeeResponse {
         this.email = email;
     }
 
-    public Date getJoinedDate() {
+    public LocalDate getJoinedDate() {
         return joinedDate;
     }
 
-    public void setJoinedDate(Date joinedDate) {
+    public void setJoinedDate(LocalDate joinedDate) {
         this.joinedDate = joinedDate;
     }
 
