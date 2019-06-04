@@ -1,8 +1,12 @@
 package com.project.cafeemployeemanagement.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.project.cafeemployeemanagement.constant.Constants;
+import com.project.cafeemployeemanagement.util.utils;
+
 import javax.persistence.*;
+import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 @Entity
@@ -64,8 +68,8 @@ public class Employee {
 
     private boolean isResigned;
 
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date joinedDate;
+    @JsonFormat(pattern= Constants.DATE_FORMAT)
+    private LocalDate joinedDate;
 
     public List<Roster> getRostersList() {
         return rostersList;
@@ -89,7 +93,7 @@ public class Employee {
         this.phoneNumber = phoneNumber;
         this.password = password;
         this.email = email;
-        this.joinedDate = new Date();
+        this.joinedDate = utils.getToday();
         this.shopOwnerId = shopOwnerId;
     }
 
@@ -228,11 +232,11 @@ public class Employee {
         isResigned = resigned;
     }
 
-    public Date getJoinedDate() {
+    public LocalDate getJoinedDate() {
         return joinedDate;
     }
 
-    public void setJoinedDate(Date joinedDate) {
+    public void setJoinedDate(LocalDate joinedDate) {
         this.joinedDate = joinedDate;
     }
 

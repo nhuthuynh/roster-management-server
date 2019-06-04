@@ -1,9 +1,10 @@
 package com.project.cafeemployeemanagement.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.project.cafeemployeemanagement.constant.Constants;
 
 import javax.persistence.*;
-import java.util.Date;
+import java.time.LocalDate;
 
 @Entity
 @Table(name="availability")
@@ -24,9 +25,8 @@ public class Availability {
 
     private boolean isAvailable;
 
-    @Temporal(TemporalType.TIMESTAMP)
-    @JsonFormat(shape=JsonFormat.Shape.STRING, pattern="dd-MM-yyyy, timezone = UTC")
-    private Date effectiveDate;
+    @JsonFormat(pattern= Constants.DATE_FORMAT)
+    private LocalDate effectiveDate;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="employee_id")
@@ -34,7 +34,7 @@ public class Availability {
 
     public Availability() {}
 
-    public Availability(String day, int startHour, int startMinute, int endHour, int endMinute, boolean isAvailable, Date effectiveDate) {
+    public Availability(String day, int startHour, int startMinute, int endHour, int endMinute, boolean isAvailable, LocalDate effectiveDate) {
         this.day = day;
         this.startHour = startHour;
         this.startMinute = startMinute;
@@ -44,7 +44,7 @@ public class Availability {
         this.effectiveDate = effectiveDate;
     }
 
-    public Availability(Long id, String day, int startHour, int startMinute, int endHour, int endMinute, boolean isAvailable, Employee employee, Date effectiveDate) {
+    public Availability(Long id, String day, int startHour, int startMinute, int endHour, int endMinute, boolean isAvailable, Employee employee, LocalDate effectiveDate) {
         this.id = id;
         this.day = day;
         this.startHour = startHour;
@@ -116,11 +116,11 @@ public class Availability {
         this.employee = employee;
     }
 
-    public Date getEffectiveDate() {
+    public LocalDate getEffectiveDate() {
         return effectiveDate;
     }
 
-    public void setEffectiveDate(Date effectiveDate) {
+    public void setEffectiveDate(LocalDate effectiveDate) {
         this.effectiveDate = effectiveDate;
     }
 }
