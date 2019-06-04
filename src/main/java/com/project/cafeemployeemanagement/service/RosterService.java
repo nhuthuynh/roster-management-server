@@ -88,6 +88,7 @@ public class RosterService {
 
     public RosterResponse findLatestRosterResponseByToDateAndShopOwner(final Long shopOwnerId) {
         Roster roster = findLatestRosterByToDateAndShopOwner(shopOwnerId);
+        if (roster == null) roster = new Roster();
         return ModelMapper.mapRosterToRosterResponse(roster);
     }
 }
