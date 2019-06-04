@@ -8,12 +8,14 @@ import com.project.cafeemployeemanagement.repository.EmployeeRepository;
 import com.project.cafeemployeemanagement.repository.RosterRepository;
 import com.project.cafeemployeemanagement.service.EmployeeService;
 import com.project.cafeemployeemanagement.service.RosterService;
+import com.project.cafeemployeemanagement.util.utils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.time.LocalDate;
 import java.util.Date;
 
 @RestController
@@ -38,13 +40,19 @@ public class RosterController {
     }
 
     @GetMapping("/load")
-    public ResponseEntity<?> loadRoster(@RequestParam("from") @DateTimeFormat(pattern = Constants.DATE_FORMAT) Date fromDate, @RequestParam("to") @DateTimeFormat(pattern = Constants.DATE_FORMAT) Date toDate, @RequestParam("shopOwnerId") Long shopOwnerId) {
-            RosterResponse roster = rosterService.loadRosterByDatesAndShopOwner(fromDate, toDate, shopOwnerId);
+    public ResponseEntity<?> loadRoster(@RequestParam("from") @DateTimeFormat(pattern = Constants.DATE_FORMAT) String fromDate, @RequestParam("to") @DateTimeFormat(pattern = Constants.DATE_FORMAT) String toDate, @RequestParam("shopOwnerId") Long shopOwnerId) {
+            RosterResponse roster = rosterService.loadRosterByDatesAndShopOwner(utils.parseLocalDate(fromDate), utils.parseLocalDate(toDate), shopOwnerId);
         return ResponseEntity.ok().body(roster);
     }
 
     @GetMapping("/shopOwner/{shopOwnerId}/employees")
     public ResponseEntity<?> loadEmployees(@PathVariable final long shopOwnerId) {
         return ResponseEntity.ok(employeeService.findByShopOwnerIdAndResignedIs(shopOwnerId, false));
+    }
+
+    @GetMapping("/shopOwner/{shopOwnerId}/latest")
+    public ResponseEntity<?> findLatestRosterByToDateAndShopOwner(@PathVariable final long shopOwnerId) {
+        RosterResponse roster = rosterService.findLatestRosterResponseByToDateAndShopOwner(shopOwnerId);
+        return ResponseEntity.ok().body(roster);
     }
 }
