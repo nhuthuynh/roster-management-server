@@ -6,6 +6,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.time.LocalDate;
 import java.util.*;
 
 public class UserPrincipal implements UserDetails {
@@ -27,13 +28,13 @@ public class UserPrincipal implements UserDetails {
 
     private String type;
 
-    private Date joinedDate;
+    private LocalDate joinedDate;
 
     private String phoneNumber;
 
     private boolean isResigned;
 
-    public UserPrincipal(Long id, String firstName, String lastName, String email, String password, Collection<? extends GrantedAuthority> authorities, Date joinedDate, String type, String role, Long shopOwnerId, String phoneNumber, boolean isResigned) {
+    public UserPrincipal(Long id, String firstName, String lastName, String email, String password, Collection<? extends GrantedAuthority> authorities, LocalDate joinedDate, String type, String role, Long shopOwnerId, String phoneNumber, boolean isResigned) {
         this.id = id;
         this.email = email;
         this.firstName = firstName;
@@ -143,11 +144,11 @@ public class UserPrincipal implements UserDetails {
         this.role = role;
     }
 
-    public Date getJoinedDate() {
+    public LocalDate getJoinedDate() {
         return joinedDate;
     }
 
-    public void setJoinedDate(Date joinedDate) {
+    public void setJoinedDate(LocalDate joinedDate) {
         this.joinedDate = joinedDate;
     }
 
