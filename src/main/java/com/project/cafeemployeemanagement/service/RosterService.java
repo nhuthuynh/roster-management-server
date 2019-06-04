@@ -12,10 +12,12 @@ import com.project.cafeemployeemanagement.repository.EmployeeShiftRepository;
 import com.project.cafeemployeemanagement.repository.RosterRepository;
 import com.project.cafeemployeemanagement.repository.ShiftRepository;
 import com.project.cafeemployeemanagement.util.ModelMapper;
+import com.project.cafeemployeemanagement.util.utils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -38,9 +40,9 @@ public class RosterService {
         Roster newRoster = new Roster();
         Employee shopOwner = employeeService.loadById(rosterRequest.getShopOwnerId());
 
-        newRoster.setFromDate(rosterRequest.getFromDate());
-        newRoster.setToDate(rosterRequest.getToDate());
-        newRoster.setCreatedDate(rosterRequest.getCreatedDate());
+        newRoster.setFromDate(utils.parseLocalDate(rosterRequest.getFromDate()));
+        newRoster.setToDate(utils.parseLocalDate(rosterRequest.getToDate()));
+        newRoster.setCreatedDate(utils.parseLocalDate(rosterRequest.getCreatedDate()));
 
         List<Shift> shifts = new ArrayList<>();
 
@@ -70,7 +72,7 @@ public class RosterService {
         return ModelMapper.mapRosterToRosterResponse(roster);
     }
 
-    public RosterResponse loadRosterByDatesAndShopOwner(final Date fromDate, final Date toDate, final Long shopOwnerId) {
+    public RosterResponse loadRosterByDatesAndShopOwner(final LocalDate fromDate, final LocalDate toDate, final Long shopOwnerId) {
         Roster roster = rosterRepository.findByDatesAndShopOwnerId(fromDate, toDate, shopOwnerId);
         if (roster == null) {
             return new RosterResponse();
@@ -79,8 +81,13 @@ public class RosterService {
     }
 
     public Roster findLatestRosterByToDateAndShopOwner(final Long shopOwnerId) {
-        List<Roster> rosters = rosterRepository.findByToDateAfterAndAndEmployee(new Date(), shopOwnerId);
+        List<Roster> rosters = rosterRepository.findByToDateAfterAndAndEmployee(utils.getToday(), shopOwnerId);
 
         return rosters.stream().reduce((first, second) -> second).orElse(null);
+    }
+
+    public RosterResponse findLatestRosterResponseByToDateAndShopOwner(final Long shopOwnerId) {
+        Roster roster = findLatestRosterByToDateAndShopOwner(shopOwnerId);
+        return ModelMapper.mapRosterToRosterResponse(roster);
     }
 }
