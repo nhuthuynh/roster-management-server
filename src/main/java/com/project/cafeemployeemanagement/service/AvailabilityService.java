@@ -21,7 +21,6 @@ import javax.transaction.Transactional;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -45,6 +44,9 @@ public class AvailabilityService {
 
         if (availabilities.size() == 0) {
             availabilities = createDefault(employeeId);
+        } else {
+            LocalDate latestDate = getLatestEffectiveDateInAvailabilities(availabilities);
+            availabilities = availabilities.stream().filter(availability -> availability.getEffectiveDate().isEqual(latestDate)).collect(Collectors.toList());
         }
 
         return availabilities;
@@ -107,26 +109,38 @@ public class AvailabilityService {
     @Transactional
     public boolean saveAll(AvailabilityRequest availabilityRequest) {
         Employee employee = employeeRepository.findById(availabilityRequest.getEmployeeId()).orElseThrow(() -> new AppException("Cannot find employee!"));
+        Roster roster = rosterService.findLatestRosterByToDateAndShopOwner(availabilityRequest.getShopOwnerId());
         List<Availability> availabilities = availabilityRepository.findByEmployeeId(availabilityRequest.getEmployeeId());
+        LocalDate latestDate = getLatestEffectiveDateInAvailabilities(availabilities);
+        List<Availability> updatingAvaiList = new ArrayList<>();
 
-        // online 1 version of availabilities
-        if (availabilities.size() == 7) {
-            availabilityRequest
-                    .getAvailabilityList().stream().map(avaiRequest -> setupAvailability(employee, avaiRequest, new Availability()))
-                    .forEach((newAvai) -> availabilities.add(newAvai));
-        } else {
-            LocalDate latestDate = getLatestEffectiveDateInAvailabilities(availabilities);
-            List<Availability> newAvailabilities = availabilities.stream().filter(availability -> availability.getEffectiveDate().equals(latestDate)).collect(Collectors.toList());
+
+
+
+        if (roster != null && availabilities.size() > 7) { // if roster is made and if there is 2 version then get the second version update with roster toDate
+            List<Availability> latestAvailabilities = availabilities.stream().filter(availability -> availability.getEffectiveDate().equals(latestDate)).collect(Collectors.toList());
             availabilityRequest
                     .getAvailabilityList().forEach(avaiRequest -> {
-                Availability newAvai = newAvailabilities.stream()
+                Availability newAvai = latestAvailabilities.stream()
                         .filter(a -> a.getId().equals(avaiRequest.getId()))
-                        .findFirst().orElseThrow(() -> new AppException("cannot find item " + avaiRequest.getDay()));
-                availabilities.add(setupAvailability(employee, avaiRequest, newAvai));
+                        .findFirst().orElse(new Availability());
+                updatingAvaiList.add(setupAvailability(employee, avaiRequest, newAvai));
+            });
+        } else if (roster != null && availabilities.size() == 7) { // if roster is made and if there is only one version then add second version with roster toDate
+            availabilityRequest
+                    .getAvailabilityList()
+                    .forEach(avaiRequest -> updatingAvaiList.add(setupAvailability(employee, avaiRequest, new Availability())));
+        } else { // if roster is not made and if there is 1 version then update only one version
+            availabilityRequest
+                    .getAvailabilityList().forEach(avaiRequest -> {
+                        Availability existedAvai = availabilities.stream()
+                                .filter(a -> a.getId().equals(avaiRequest.getId()))
+                                .findFirst().orElse(new Availability());
+                updatingAvaiList.add(setupAvailability(employee, avaiRequest, existedAvai));
             });
         }
 
-        return availabilityRepository.saveAll(availabilities).size() > 0;
+        return availabilityRepository.saveAll(updatingAvaiList).size() > 0;
     }
 
     private LocalDate getLatestEffectiveDateInAvailabilities(final List<Availability> availabilities) {

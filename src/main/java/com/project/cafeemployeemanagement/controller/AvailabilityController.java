@@ -22,8 +22,8 @@ public class AvailabilityController {
     @Autowired
     private AvailabilityService availabilityService;
 
-    @GetMapping("/load")
-    public ResponseEntity<?> loadAvailabilities(@RequestParam("employeeId") Long employeeId) {
+    @GetMapping("/employee/{employeeId}")
+    public ResponseEntity<?> loadAvailabilities(@PathVariable("employeeId") final Long employeeId) {
         List<AvailabilityResponse> availabilityList = availabilityService.findResponsesByEmployeeId(employeeId);
         if (availabilityList.size() == 0) {
             return ResponseEntity.badRequest().body(new ApiResponse(false, "Failed to load employee's availability"));
@@ -31,7 +31,7 @@ public class AvailabilityController {
         return ResponseEntity.ok(availabilityList);
     }
 
-    @GetMapping("/load/toDate/{toDate}/employee/{employeeId}")
+    @GetMapping("/toDate/{toDate}/employee/{employeeId}")
     public ResponseEntity<?> loadEmployeeAvailabilities(@PathVariable("employeeId") final Long employeeId, @PathVariable("toDate") @DateTimeFormat(pattern = Constants.DATE_FORMAT) final String rosterToDate) {
         List<AvailabilityResponse> availabilityList = availabilityService.findResponsesByEffectiveDateAfterAndEmployeeId(utils.parseLocalDate(rosterToDate), employeeId);
         if (availabilityList.size() == 0) {
@@ -41,7 +41,7 @@ public class AvailabilityController {
     }
 
     @PostMapping("/save")
-    public ResponseEntity<?> saveAvailabilities(@Valid @RequestBody AvailabilityRequest availabilityRequest) {
+    public ResponseEntity<?> saveAvailabilities(@Valid @RequestBody final AvailabilityRequest availabilityRequest) {
 
         if (!availabilityService.saveAll(availabilityRequest)) {
             return ResponseEntity.badRequest().body(new ApiResponse(false, "Failed to update!"));
