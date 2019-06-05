@@ -3,7 +3,6 @@ package com.project.cafeemployeemanagement.controller;
 import com.project.cafeemployeemanagement.constant.Constants;
 import com.project.cafeemployeemanagement.payload.ApiResponse;
 import com.project.cafeemployeemanagement.payload.RosterRequest;
-import com.project.cafeemployeemanagement.payload.RosterResponse;
 import com.project.cafeemployeemanagement.repository.RosterRepository;
 import com.project.cafeemployeemanagement.service.EmployeeService;
 import com.project.cafeemployeemanagement.service.RosterService;
@@ -38,8 +37,7 @@ public class RosterController {
 
     @GetMapping("/load")
     public ResponseEntity<?> loadRoster(@RequestParam("from") @DateTimeFormat(pattern = Constants.DATE_FORMAT) String fromDate, @RequestParam("to") @DateTimeFormat(pattern = Constants.DATE_FORMAT) String toDate, @RequestParam("shopOwnerId") Long shopOwnerId) {
-            RosterResponse roster = rosterService.loadRosterByDatesAndShopOwner(utils.parseLocalDate(fromDate), utils.parseLocalDate(toDate), shopOwnerId);
-        return ResponseEntity.ok().body(roster);
+        return ResponseEntity.ok().body(rosterService.loadRosterByDatesAndShopOwner(utils.parseLocalDate(fromDate), utils.parseLocalDate(toDate), shopOwnerId));
     }
 
     @GetMapping("/shopOwner/{shopOwnerId}/employees")
@@ -49,7 +47,6 @@ public class RosterController {
 
     @GetMapping("/shopOwner/{shopOwnerId}/latest")
     public ResponseEntity<?> findLatestRosterByToDateAndShopOwner(@PathVariable final long shopOwnerId) {
-        RosterResponse roster = rosterService.findLatestRosterResponseByToDateAndShopOwner(shopOwnerId);
-        return ResponseEntity.ok().body(roster);
+        return ResponseEntity.ok().body(rosterService.findLatestRosterResponseByToDateAndShopOwner(shopOwnerId));
     }
 }
