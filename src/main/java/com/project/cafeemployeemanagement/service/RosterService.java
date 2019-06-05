@@ -5,6 +5,7 @@ import com.project.cafeemployeemanagement.model.Employee;
 import com.project.cafeemployeemanagement.model.EmployeeShift;
 import com.project.cafeemployeemanagement.model.Roster;
 import com.project.cafeemployeemanagement.model.Shift;
+import com.project.cafeemployeemanagement.payload.RosterPayload;
 import com.project.cafeemployeemanagement.payload.RosterRequest;
 import com.project.cafeemployeemanagement.payload.RosterResponse;
 import com.project.cafeemployeemanagement.repository.EmployeeRepository;
@@ -82,13 +83,10 @@ public class RosterService {
 
     public Roster findLatestRosterByToDateAndShopOwner(final Long shopOwnerId) {
         List<Roster> rosters = rosterRepository.findByToDateAfterAndAndEmployee(utils.getToday(), shopOwnerId);
-
         return rosters.stream().reduce((first, second) -> second).orElse(null);
     }
 
-    public RosterResponse findLatestRosterResponseByToDateAndShopOwner(final Long shopOwnerId) {
-        Roster roster = findLatestRosterByToDateAndShopOwner(shopOwnerId);
-        if (roster == null) roster = new Roster();
-        return ModelMapper.mapRosterToRosterResponse(roster);
+    public RosterPayload findLatestRosterResponseByToDateAndShopOwner(final Long shopOwnerId) {
+        return ModelMapper.mapRosterToPayload(findLatestRosterByToDateAndShopOwner(shopOwnerId));
     }
 }
