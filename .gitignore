@@ -56,3 +56,5 @@ hs_err_pid*
 !.elasticbeanstalk/*.global.yml
 
 *.pem
+!.pem
+*.travis.yml
