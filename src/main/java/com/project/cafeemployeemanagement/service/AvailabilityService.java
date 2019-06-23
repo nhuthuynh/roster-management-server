@@ -4,14 +4,13 @@ import com.project.cafeemployeemanagement.constant.Constants;
 import com.project.cafeemployeemanagement.exception.AppException;
 import com.project.cafeemployeemanagement.model.Availability;
 import com.project.cafeemployeemanagement.model.Employee;
-import com.project.cafeemployeemanagement.model.Roster;
 import com.project.cafeemployeemanagement.payload.AvailabilityRequest;
 import com.project.cafeemployeemanagement.payload.AvailabilityResponse;
+import com.project.cafeemployeemanagement.payload.LatestRosterDatesPayLoad;
 import com.project.cafeemployeemanagement.repository.AvailabilityRepository;
 import com.project.cafeemployeemanagement.repository.EmployeeRepository;
 import com.project.cafeemployeemanagement.util.ModelMapper;
 import com.project.cafeemployeemanagement.util.utils;
-import org.apache.tomcat.jni.Local;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,7 +45,10 @@ public class AvailabilityService {
             availabilities = createDefault(employeeId);
         } else {
             LocalDate latestDate = getLatestEffectiveDateInAvailabilities(availabilities);
-            availabilities = availabilities.stream().filter(availability -> availability.getEffectiveDate().isEqual(latestDate)).collect(Collectors.toList());
+            availabilities = availabilities.stream()
+                    .filter(availability ->
+                            availability.getEffectiveDate().isEqual(latestDate) ||
+                                    availability.getEffectiveDate().isAfter(latestDate)).distinct().limit(7).collect(Collectors.toList());
         }
 
         return availabilities;
@@ -109,15 +111,12 @@ public class AvailabilityService {
     @Transactional
     public boolean saveAll(AvailabilityRequest availabilityRequest) {
         Employee employee = employeeRepository.findById(availabilityRequest.getEmployeeId()).orElseThrow(() -> new AppException("Cannot find employee!"));
-        Roster roster = rosterService.findLatestRosterByToDateAndShopOwner(availabilityRequest.getShopOwnerId());
+        LatestRosterDatesPayLoad latestRosterDates = rosterService.findLatestRosterByToDateAndShopOwner(availabilityRequest.getShopOwnerId());
         List<Availability> availabilities = availabilityRepository.findByEmployeeId(availabilityRequest.getEmployeeId());
         LocalDate latestDate = getLatestEffectiveDateInAvailabilities(availabilities);
         List<Availability> updatingAvaiList = new ArrayList<>();
 
-
-
-
-        if (roster != null && availabilities.size() > 7) { // if roster is made and if there is 2 version then get the second version update with roster toDate
+        if (latestRosterDates != null && availabilities.size() > 7) { // if roster is made and if there is 2 version then get the second version update with roster toDate
             List<Availability> latestAvailabilities = availabilities.stream().filter(availability -> availability.getEffectiveDate().equals(latestDate)).collect(Collectors.toList());
             availabilityRequest
                     .getAvailabilityList().forEach(avaiRequest -> {
@@ -126,7 +125,7 @@ public class AvailabilityService {
                         .findFirst().orElse(new Availability());
                 updatingAvaiList.add(setupAvailability(employee, avaiRequest, newAvai));
             });
-        } else if (roster != null && availabilities.size() == 7) { // if roster is made and if there is only one version then add second version with roster toDate
+        } else if (latestRosterDates != null && availabilities.size() == 7) { // if roster is made and if there is only one version then add second version with roster toDate
             availabilityRequest
                     .getAvailabilityList()
                     .forEach(avaiRequest -> updatingAvaiList.add(setupAvailability(employee, avaiRequest, new Availability())));

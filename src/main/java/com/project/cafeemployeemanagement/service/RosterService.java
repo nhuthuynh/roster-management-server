@@ -5,7 +5,7 @@ import com.project.cafeemployeemanagement.model.Employee;
 import com.project.cafeemployeemanagement.model.EmployeeShift;
 import com.project.cafeemployeemanagement.model.Roster;
 import com.project.cafeemployeemanagement.model.Shift;
-import com.project.cafeemployeemanagement.payload.RosterPayload;
+import com.project.cafeemployeemanagement.payload.LatestRosterDatesPayLoad;
 import com.project.cafeemployeemanagement.payload.RosterRequest;
 import com.project.cafeemployeemanagement.payload.RosterResponse;
 import com.project.cafeemployeemanagement.repository.EmployeeRepository;
@@ -20,8 +20,8 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicReference;
 
 @Service
 public class RosterService {
@@ -81,12 +81,27 @@ public class RosterService {
         return loadRoster(roster);
     }
 
-    public Roster findLatestRosterByToDateAndShopOwner(final Long shopOwnerId) {
-        List<Roster> rosters = rosterRepository.findByToDateAfterAndAndEmployee(utils.getToday(), shopOwnerId);
-        return rosters.stream().reduce((first, second) -> second).orElse(null);
+    public LatestRosterDatesPayLoad findLatestRosterByToDateAndShopOwner(final Long shopOwnerId) {
+        List<Roster> rosters = rosterRepository.findByToDateAfterAndEmployee(utils.getToday(), shopOwnerId);
+        LatestRosterDatesPayLoad rosterDatesPayLoad = new LatestRosterDatesPayLoad();
+        if (rosters.size() == 0) {
+            return rosterDatesPayLoad;
+        }
+        AtomicReference<LocalDate> latestToDate = new AtomicReference<>(rosters.get(0).getToDate());
+        rosterDatesPayLoad.setToDate(rosters.get(0).getToDate().format(utils.getDateTimeFormatter()));
+        rosterDatesPayLoad.setFromDate(rosters.get(0).getFromDate().format(utils.getDateTimeFormatter()));
+        rosters.forEach((roster -> {
+            if (latestToDate.get().isBefore(roster.getToDate())) {
+                latestToDate.set(roster.getToDate());
+                rosterDatesPayLoad.setToDate(roster.getToDate().format(utils.getDateTimeFormatter()));
+                rosterDatesPayLoad.setFromDate(roster.getFromDate().format(utils.getDateTimeFormatter()));
+            }
+        }));
+
+        return rosterDatesPayLoad;
     }
 
-    public RosterPayload findLatestRosterResponseByToDateAndShopOwner(final Long shopOwnerId) {
-        return ModelMapper.mapRosterToPayload(findLatestRosterByToDateAndShopOwner(shopOwnerId));
+    public LatestRosterDatesPayLoad findLatestRosterResponseByToDateAndShopOwner(final Long shopOwnerId) {
+        return findLatestRosterByToDateAndShopOwner(shopOwnerId);
     }
 }

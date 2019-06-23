@@ -37,6 +37,6 @@ public class UtilsService {
     }
 
     public String getAppUrl(HttpServletRequest request) {
-        return protocol + request.getServerName() + ":" + clientPort + request.getContextPath();
+        return protocol + request.getServerName() + request.getContextPath();
     }
 }

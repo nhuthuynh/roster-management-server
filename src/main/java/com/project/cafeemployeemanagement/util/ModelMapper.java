@@ -37,9 +37,6 @@ public class ModelMapper {
     public static RosterPayload mapRosterToPayload(Roster roster) {
         RosterPayload payload = new RosterPayload();
         if (roster != null) {
-            payload.setId(roster.getId());
-            payload.setShopOwnerId(roster.getEmployee().getId());
-            payload.setCreatedDate(roster.getCreatedDate().format(utils.getDateTimeFormatter()));
             payload.setFromDate(roster.getFromDate().format(utils.getDateTimeFormatter()));
             payload.setToDate(roster.getToDate().format(utils.getDateTimeFormatter()));
         }

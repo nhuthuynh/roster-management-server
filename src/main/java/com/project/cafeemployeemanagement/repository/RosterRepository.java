@@ -15,6 +15,6 @@ public interface RosterRepository extends JpaRepository<Roster, Long> {
     @Query("SELECT r FROM Roster AS r WHERE r.fromDate >= :fromDate and r.fromDate <= :toDate and r.employee.id = :shopOwnerId")
     Roster findByDatesAndShopOwnerId(@Param("fromDate") LocalDate fromDate, @Param("toDate") LocalDate toDate, @Param("shopOwnerId") Long shopOwnerId);
 
-    @Query("SELECT r FROM Roster AS r WHERE r.toDate > :currentDate and r.employee.id = :shopOwnerId")
-    List<Roster> findByToDateAfterAndAndEmployee(@Param("currentDate") LocalDate currentDate , @Param("shopOwnerId") Long shopOwnerId);
+    @Query("SELECT r FROM Roster AS r WHERE r.toDate >= :currentDate and r.employee.id = :shopOwnerId")
+    List<Roster> findByToDateAfterAndEmployee(@Param("currentDate") LocalDate currentDate , @Param("shopOwnerId") Long shopOwnerId);
 }
